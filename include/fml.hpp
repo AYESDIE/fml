@@ -31,6 +31,12 @@
 #include <string>
 #include <sstream>
 
+
+#include <ensmallen.hpp>
+
+#include "fml-bits/linear_svm/linear_svm_function.hpp"
+#include "fml-bits/linear_svm/linear_svm_function_impl.hpp"
 #include "fml-bits/linear_svm/linear_svm.hpp"
+#include "fml-bits/linear_svm/linear_svm_impl.hpp"
 
 #endif

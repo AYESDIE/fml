@@ -9,7 +9,7 @@
 #ifndef FML_LINEAR_SVM_LINEAR_SVM_FUNCTION_HPP
 #define FML_LINEAR_SVM_LINEAR_SVM_FUNCTION_HPP
 
-namespace alt {
+namespace fml {
 namespace svm {
 
 /**

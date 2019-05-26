@@ -11,7 +11,7 @@
 
 #include "linear_svm_function.hpp"
 
-namespace alt {
+namespace fml {
 namespace svm {
 
 /**

@@ -9,13 +9,14 @@
 #include "catch.hpp"
 
 using namespace std;
-using namespace alt;
+using namespace fml;
+using namespace fml::svm;
 
 /**
  * Test training of linear svm on a simple dataset using
  * Gradient Descent optimizer
  */
-TEST_CASE("LinearSVMGradientDescentSimpleTest","[LinearSVMGradientDescentSimpleTest]")
+TEST_CASE("LinearSVMGradientDescentSimpleTest","[LinearSVMTest]")
 {
   const size_t numClasses = 2;
   const size_t maxIterations = 10000;
@@ -41,5 +42,5 @@ TEST_CASE("LinearSVMGradientDescentSimpleTest","[LinearSVMGradientDescentSimpleT
 
   // Compare training accuracy to 1.
   const double acc = lsvm.ComputeAccuracy(dataset, labels);
-  BOOST_REQUIRE_CLOSE(acc, 1.0, 0.5);
+  REQUIRE(acc - 1.0 <= 10e-2);
 }
