@@ -17,5 +17,6 @@
 #include <string>
 #include <sstream>
 
+#include "fml-bits/LinearSVM/linear_svm.hpp"
 
 #endif
