@@ -39,3 +39,4 @@ install(FILES ${CMAKE_SOURCE_DIR}/include/fml.hpp
         DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
 
 enable_testing()
+add_subdirectory(tests)

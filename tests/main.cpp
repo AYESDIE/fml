@@ -1,6 +1,4 @@
-//
-// Created by ayesdie on 25/5/19.
-//
+
 
 #include <iostream>
 #include "fml.hpp"
