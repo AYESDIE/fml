@@ -29,7 +29,7 @@ include_directories(BEFORE "${ARMADILLO_INCLUDE_DIR}")
 include_directories(BEFORE "${CMAKE_SOURCE_DIR}/include/")
 
 # Install the headers to the correct location.
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/flm_bits"
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/include/fml_bits"
         DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
         PATTERN "*~" EXCLUDE
         PATTERN "*.sw*" EXCLUDE)

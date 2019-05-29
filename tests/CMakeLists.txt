@@ -4,7 +4,7 @@ set(FML_TESTS_SOURCES
         main.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
-add_executable(${PROJECT_NAME} ${ALT_TESTS_SOURCES})
+add_executable(${PROJECT_NAME} ${FML_TESTS_SOURCES})
 
 
 enable_testing()
