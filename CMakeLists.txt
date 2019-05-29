@@ -1,4 +1,4 @@
-# alt CMake configuration. This project has no configurable options.
+# fml CMake configuration. This project has no configurable options.
 cmake_minimum_required(VERSION 2.8.10)
 project(fml C CXX)
 
@@ -37,3 +37,4 @@ install(FILES ${CMAKE_SOURCE_DIR}/include/fml.hpp
         DESTINATION "${CMAKE_INSTALL_PREFIX}/include")
 
 enable_testing()
+add_subdirectory(tests)

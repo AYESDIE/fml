@@ -19,4 +19,6 @@
 
 #include <armadillo>
 
+#include "fml-bits/optimizers/sgd/sgd.hpp"
+
 #endif
