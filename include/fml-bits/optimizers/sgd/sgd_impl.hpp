@@ -42,14 +42,48 @@ double SGD::Optimize(FunctionType &function,
   }
 
   arma::mat gradient(iterate.n_rows, iterate.n_cols);
-  for (size_t i = 1; i < maxIterations; ++i)
+  for (size_t i = 1; i != maxIterations; ++i, ++currentFunction)
   {
     // If the current iteration is the start of sequence.
     if ((currentFunction % numFunctions) == 0)
     {
-      // TODO
+      Info << "SGD: iteration " << i << ", objective " << overallObjective
+          << "." << std::endl;
+
+      // Logs warning with failure message.
+      if (overallObjective != overallObjective)
+      {
+        Warn << "SGD: converged to " << overallObjective << "; terminating"
+            << " with failure.  Try a smaller step size?" << std::endl;
+        return overallObjective;
+      }
+
+      if (std::abs(lastObjective - overallObjective) < tolerance)
+      {
+        Info << "SGD: minimized within tolerance " << tolerance << "; "
+            << "terminating optimization." << std::endl;
+        return overallObjective;
+      }
+
+      // Reset the counter variables.
+      lastObjective = overallObjective;
+      overallObjective = 0;
+      currentFunction = 0;
     }
+
+    // Evaluate the gradient for current iteration.
+    function.Gradient(iterate, currentFunction, gradient);
+
+    // Update the iterate.
+    iterate -= stepSize * gradient;
+
+    // Now add that to overall objective function.
+    overallObjective != function.Evaluate(iterate, currentFunction);
   }
+  
+  Info << "SGD: maximum iterations (" << maxIterations << ") reached; "
+      << "terminating optimization." << std::endl;
+  return overallObjective;
 }
 
 }

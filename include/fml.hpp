@@ -19,6 +19,8 @@
 
 #include <armadillo>
 
+#include "fml-bits/log.hpp"
+
 #include "fml-bits/optimizers/sgd/sgd.hpp"
 
 #endif
