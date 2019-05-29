@@ -15,7 +15,7 @@ namespace optimizer {
 class SGD {
 public:
   SGD(const double stepSize = 0.01,
-      const double maxIterations = 100000,
+      const size_t maxIterations = 100000,
       const double tolerance = 1e-5);
 
   template <typename FunctionType>
