@@ -17,5 +17,6 @@
 #include <string>
 #include <sstream>
 
+#include <armadillo>
 
 #endif

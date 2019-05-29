@@ -23,7 +23,9 @@ else()
     set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif ()
 
-
+# Include the dependency.
+find_package(Armadillo 6.500.0 REQUIRED)
+include_directories(BEFORE "${ARMADILLO_INCLUDE_DIR}")
 include_directories(BEFORE "${CMAKE_SOURCE_DIR}/include/")
 
 # Install the headers to the correct location.
