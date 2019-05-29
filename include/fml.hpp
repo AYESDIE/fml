@@ -19,4 +19,9 @@
 
 #include <armadillo>
 
+#include "fml-bits/log.hpp"
+
+#include "fml-bits/optimizers/sgd/sgd.hpp"
+#include "fml-bits/optimizers/sgd/sgd_test_function.hpp"
+
 #endif

@@ -1,7 +1,8 @@
 project(fml_tests CXX)
 
 set(FML_TESTS_SOURCES
-        main.cpp)
+        main.cpp
+        sgd_test.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 add_executable(${PROJECT_NAME} ${FML_TESTS_SOURCES})
