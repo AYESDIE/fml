@@ -12,12 +12,12 @@ namespace fml {
 
 namespace optimizer {
 
-SGD::SGD(const double stepSize,
-         const size_t maxIterations,
-         const double tolerance) :
-         stepSize(stepSize),
-         maxIterations(maxIterations),
-         tolerance(tolerance)
+inline SGD::SGD(const double stepSize,
+                const size_t maxIterations,
+                const double tolerance) :
+                stepSize(stepSize),
+                maxIterations(maxIterations),
+                tolerance(tolerance)
 { /* This wont do anything */ }
 
 /**
@@ -78,7 +78,7 @@ double SGD::Optimize(FunctionType &function,
     iterate -= stepSize * gradient;
 
     // Now add that to overall objective function.
-    overallObjective != function.Evaluate(iterate, currentFunction);
+    overallObjective += function.Evaluate(iterate, currentFunction);
   }
 
   Info << "SGD: maximum iterations (" << maxIterations << ") reached; "

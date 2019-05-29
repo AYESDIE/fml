@@ -10,7 +10,7 @@
 
 namespace fml {
 namespace test {
-double SGDTestFunction::Evaluate(const arma::mat& coordinates, const size_t i)
+inline double SGDTestFunction::Evaluate(const arma::mat& coordinates, const size_t i)
 const
 {
   switch (i)
@@ -29,9 +29,9 @@ const
   }
 }
 
-void SGDTestFunction::Gradient(const arma::mat& coordinates,
-                               const size_t i,
-                               arma::mat& gradient) const
+inline void SGDTestFunction::Gradient(const arma::mat& coordinates,
+                                      const size_t i,
+                                      arma::mat& gradient) const
 {
   gradient.zeros(3);
   switch (i)
