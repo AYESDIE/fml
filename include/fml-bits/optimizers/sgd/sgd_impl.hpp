@@ -1,5 +1,5 @@
 /**
- * @file sgd.hpp
+ * @file sgd_impl.hpp
  * @author Ayush Chamoli
  *
  * Implementation of Stochastic Gradient Descent.
@@ -80,7 +80,7 @@ double SGD::Optimize(FunctionType &function,
     // Now add that to overall objective function.
     overallObjective != function.Evaluate(iterate, currentFunction);
   }
-  
+
   Info << "SGD: maximum iterations (" << maxIterations << ") reached; "
       << "terminating optimization." << std::endl;
   return overallObjective;
