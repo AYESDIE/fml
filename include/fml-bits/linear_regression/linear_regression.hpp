@@ -1,0 +1,19 @@
+//
+// Created by ayesdie on 3/6/19.
+//
+
+#ifndef FML_INCLUDE_FML_BITS_LINEAR_REGRESSION_LINEAR_REGRESSION_HPP
+#define FML_INCLUDE_FML_BITS_LINEAR_REGRESSION_LINEAR_REGRESSION_HPP
+
+namespace fml {
+namespace regression {
+
+class LinearRegression {
+
+
+};
+
+}
+}
+
+#endif //FML_INCLUDE_FML_BITS_LINEAR_REGRESSION_LINEAR_REGRESSION_HPP

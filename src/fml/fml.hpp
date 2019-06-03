@@ -19,6 +19,15 @@
 
 #include <armadillo>
 
+<<<<<<< feature-cmake-remake:src/fml/fml.hpp
 #include "core/util/log.hpp"
+=======
+#include "fml-bits/log.hpp"
+
+#include "fml-bits/linear_regression/linear_regression_function.hpp"
+
+#include "fml-bits/optimizers/sgd/sgd.hpp"
+#include "fml-bits/optimizers/sgd/sgd_test_function.hpp"
+>>>>>>> base linear regression class:include/fml.hpp
 
 #endif
