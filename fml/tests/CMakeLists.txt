@@ -2,11 +2,14 @@ project(fml_tests CXX)
 
 set(FML_TESTS_SOURCES
     main.cpp
+    sgd_test.cpp
     linear_regression_test.cpp
-    sgd_test.cpp)
+        )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 add_executable(${PROJECT_NAME} ${FML_TESTS_SOURCES})
+
+target_link_libraries(${PROJECT_NAME} ${ARMADILLO_LIBRARIES})
 
 # Copy test data into place.
 add_custom_command(TARGET ${PROJECT_NAME}
