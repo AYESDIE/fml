@@ -19,7 +19,15 @@ public:
   double Evaluate(const arma::mat& parameters);
 
   double Evaluate(const arma::mat& parameters,
-                  const size_t id);
+                  const size_t& id);
+
+  void Gradient(const arma::mat& parameters,
+                arma::mat& gradient);
+
+  void Gradient(const arma::mat& parameters,
+                arma::mat& gradient,
+                const size_t& id);
+
 private:
 
   arma::mat dataset;
@@ -37,7 +45,8 @@ LinearRegressionFunction::LinearRegressionFunction(const arma::mat &dataset,
     fitIntercept(fitIntercept)
 { /* Nothing to do here */ }
 
-double LinearRegressionFunction::Evaluate(const arma::mat &parameters) {
+double LinearRegressionFunction::Evaluate(const arma::mat& parameters)
+{
   arma::mat score;
 
   if (!fitIntercept)
@@ -54,12 +63,14 @@ double LinearRegressionFunction::Evaluate(const arma::mat &parameters) {
   score = score.t() - labels;
   score %= score;
 
-  return arma::accu(score);
+  return arma::accu(score) / (dataset.n_cols * 2);
 }
 
-double LinearRegressionFunction::Evaluate(const arma::mat &parameters, const size_t id) {
+double LinearRegressionFunction::Evaluate(const arma::mat& parameters,
+                                          const size_t& id)
+{
   // Loss is evaluated as
-  // Σ (h(x) - y)
+  // (1/m)Σ (h(x) - y)
   double score;
 
   if (!fitIntercept)
@@ -72,7 +83,49 @@ double LinearRegressionFunction::Evaluate(const arma::mat &parameters, const siz
         parameters.col(dataset.n_rows));
   }
 
-  return std::pow(score - labels(id), 2);
+  return std::pow(score - labels(id), 2) / 2;
+}
+
+void LinearRegressionFunction::Gradient(const arma::mat& parameters,
+                                        arma::mat& gradient)
+{
+  arma::mat score;
+
+  if (!fitIntercept)
+  {
+    score = parameters * dataset;
+  }
+  else
+  {
+    score = parameters.head_cols(dataset.n_rows) * dataset +
+        arma::accu(parameters.col(dataset.n_rows));
+  }
+
+  score = score.t() - labels;
+
+  gradient = dataset * score / dataset.n_cols;
+}
+
+void LinearRegressionFunction::Gradient(const arma::mat& parameters,
+                                        arma::mat& gradient,
+                                        const size_t& id)
+{
+  arma::mat score;
+
+  if (!fitIntercept)
+  {
+    score = parameters * dataset.col(id);
+  }
+  else
+  {
+    score = parameters.head_cols(dataset.n_rows) * dataset.col(id) +
+        arma::accu(parameters.col(dataset.n_rows));
+  }
+
+  score = score.t() - labels.row(id);
+
+  gradient = dataset.col(id) * score;
+
 }
 
 }
