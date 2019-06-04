@@ -1,7 +1,8 @@
 
 ## recurse
 set(DIRS
-    optimizers)
+    optimizers
+    linear_regression)
 
 foreach(dir ${DIRS})
     add_subdirectory(${dir})
