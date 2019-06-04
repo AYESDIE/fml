@@ -25,8 +25,15 @@ public:
                 arma::mat& gradient);
 
   void Gradient(const arma::mat& parameters,
-                arma::mat& gradient,
-                const size_t& id);
+                const size_t& id,
+                arma::mat& gradient);
+
+  arma::mat initialParameters();
+
+  size_t NumFunctions()
+  {
+    return dataset.n_cols;
+  }
 
 private:
 
@@ -107,8 +114,8 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
 }
 
 void LinearRegressionFunction::Gradient(const arma::mat& parameters,
-                                        arma::mat& gradient,
-                                        const size_t& id)
+                                        const size_t& id,
+                                        arma::mat& gradient)
 {
   arma::mat score;
 
@@ -126,6 +133,18 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
 
   gradient = dataset.col(id) * score;
 
+}
+
+arma::mat LinearRegressionFunction::initialParameters()
+{
+  if (!fitIntercept)
+  {
+    return arma::randu<arma::mat>(dataset.n_rows, 1);
+  }
+  else
+  {
+    return arma::randu<arma::mat>(dataset.n_rows + 1, 1);
+  }
 }
 
 }

@@ -3,6 +3,7 @@
 # Anything not in this list will not be compiled into the output library
 # Do not include test programs here
 set(SOURCES
+    linear_regression.hpp
     linear_regression_function.hpp)
 
 # add directory name to sources

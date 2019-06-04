@@ -1,6 +1,6 @@
 
 #include "../fml.hpp"
-#include "../methods/linear_regression/linear_regression_function.hpp"
+#include "../methods/linear_regression/linear_regression.hpp"
 #include "catch.hpp"
 
 using namespace fml;
@@ -80,7 +80,7 @@ TEST_CASE("LinearRegressionFunctionGradientTest","[LinearRegressionFunctionTest]
   for (int i = 0; i < dataset.n_cols; ++i)
   {
     arma::mat gengradient;
-    lrf.Gradient(parameters, gengradient, i);
+    lrf.Gradient(parameters, i, gengradient);
     gradient += gengradient;
   }
   gradient /= dataset.n_cols;
@@ -91,4 +91,22 @@ TEST_CASE("LinearRegressionFunctionGradientTest","[LinearRegressionFunctionTest]
   {
     REQUIRE(grad(j) == gradient(j));
   }
+}
+
+TEST_CASE("LinearRegressionTest", "[LinearRegressionFunction]")
+{
+  arma::mat dataset;
+  if (!dataset.load("data/linreg.csv", arma::csv_ascii))
+  {
+    FAIL("couldn't load data");
+    return;
+  }
+
+  arma::vec labels = dataset.col(2);
+
+  dataset = dataset.cols(0, 1).t();
+
+  LinearRegression lr(dataset, labels, true);
+
+  REQUIRE(false);
 }
