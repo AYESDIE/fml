@@ -17,7 +17,7 @@
 #include <string>
 #include <sstream>
 
-#include <armadillo>
+#include "armadillo"
 
 #include "core/util/log.hpp"
 

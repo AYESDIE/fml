@@ -1,5 +1,5 @@
 # fml CMake configuration. This project has no configurable options.
-cmake_minimum_required(VERSION 2.8.10)
+cmake_minimum_required(VERSION 3.0)
 project(fml C CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
@@ -10,4 +10,4 @@ include_directories(BEFORE "${ARMADILLO_INCLUDE_DIR}")
 include_directories(BEFORE "${CMAKE_SOURCE_DIR}/include/")
 
 enable_testing()
-add_subdirectory(src/fml)
+add_subdirectory(fml)
