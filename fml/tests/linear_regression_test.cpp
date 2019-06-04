@@ -107,6 +107,10 @@ TEST_CASE("LinearRegressionTest", "[LinearRegressionFunction]")
   dataset = dataset.cols(0, 1).t();
 
   LinearRegression lr(dataset, labels, true);
+  arma::vec pred;
 
+  lr.Compute(dataset, pred);
+
+  std::cout << pred;
   REQUIRE(false);
 }

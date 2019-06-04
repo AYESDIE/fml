@@ -87,7 +87,7 @@ double LinearRegressionFunction::Evaluate(const arma::mat& parameters,
   else
   {
     score = arma::accu(parameters.head_cols(dataset.n_rows) * dataset.col(id) +
-        parameters.col(dataset.n_rows));
+        parameters.col(dataset.n_rows - 1));
   }
 
   return std::pow(score - labels(id), 2) / 2;
@@ -117,7 +117,10 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
                                         const size_t& id,
                                         arma::mat& gradient)
 {
+
   arma::mat score;
+
+  gradient.set_size(arma::size(parameters));
 
   if (!fitIntercept)
   {
@@ -131,7 +134,15 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
 
   score = score.t() - labels.row(id);
 
-  gradient = dataset.col(id) * score;
+  if (fitIntercept)
+  {
+    gradient.submat(0, 0, parameters.n_rows - 1, parameters.n_cols - 2) = score * dataset.col(id).t();
+    gradient.col(parameters.n_cols - 1) = score;
+  }
+  else
+  {
+    gradient = score * dataset.col(id).t();
+  }
 
 }
 
@@ -139,11 +150,11 @@ arma::mat LinearRegressionFunction::initialParameters()
 {
   if (!fitIntercept)
   {
-    return arma::randu<arma::mat>(dataset.n_rows, 1);
+    return arma::randu<arma::mat>(1, dataset.n_rows);
   }
   else
   {
-    return arma::randu<arma::mat>(dataset.n_rows + 1, 1);
+    return arma::randu<arma::mat>(1, dataset.n_rows + 1);
   }
 }
 
