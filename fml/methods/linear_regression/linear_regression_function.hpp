@@ -118,7 +118,6 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
 
     gradient = data * (parameters * data  - labels.t()).t() / data.n_cols;
   }
-
 }
 
 void LinearRegressionFunction::Gradient(const arma::mat& parameters,
@@ -133,23 +132,19 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
   if (!fitIntercept)
   {
     score = parameters * dataset.col(id);
+    score = score.t() - labels.row(id);
+    gradient = dataset.col(id) * score;
   }
   else
   {
-    score = parameters.head_cols(dataset.n_rows) * dataset.col(id) +
-        arma::accu(parameters.col(dataset.n_rows));
-  }
+    arma::mat data = arma::ones<arma::mat>(dataset.n_rows + 1, dataset.n_cols);
+    data.submat(0, 0, dataset.n_rows - 1, dataset.n_cols - 1) = dataset;
+    score = parameters * data.col(id);
 
-  score = score.t() - labels.row(id);
+    score = score.t() - labels.row(id);
 
-  if (fitIntercept)
-  {
-    gradient.submat(0, 0, parameters.n_rows - 1, parameters.n_cols - 2) = score * dataset.col(id).t();
-    gradient.col(parameters.n_cols - 1) = score;
-  }
-  else
-  {
-    gradient = score * dataset.col(id).t();
+
+    gradient = data.col(id) * score;
   }
 
 }
