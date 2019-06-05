@@ -4,7 +4,10 @@
  *
  * Test for Stochastic Gradient Descent.
  */
-#include <fml.hpp>
+
+#include "../fml.hpp"
+#include "../methods/optimizers/sgd/sgd.hpp"
+#include "../methods/optimizers/sgd/sgd_test_function.hpp"
 #include "catch.hpp"
 
 using namespace fml;
