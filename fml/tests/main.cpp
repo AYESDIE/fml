@@ -1,6 +1,4 @@
 /**
- * @file main.hpp
- * @author Ayush Chamoli
  */
 
 #include <iostream>

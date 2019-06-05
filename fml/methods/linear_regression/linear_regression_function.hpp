@@ -118,6 +118,8 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
 
     gradient = data * (parameters * data  - labels.t()).t() / data.n_cols;
   }
+
+  gradient = gradient.t();
 }
 
 void LinearRegressionFunction::Gradient(const arma::mat& parameters,
@@ -147,6 +149,7 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
     gradient = data.col(id) * score;
   }
 
+  gradient = gradient.t();
 }
 
 arma::mat LinearRegressionFunction::initialParameters()

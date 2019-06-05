@@ -26,6 +26,8 @@ public:
 
 private:
   arma::mat parameters;
+
+  bool fitIntercept;
 };
 
 LinearRegression::LinearRegression()
@@ -33,7 +35,8 @@ LinearRegression::LinearRegression()
 
 LinearRegression::LinearRegression(const arma::mat& dataset,
                                    const arma::vec& labels,
-                                   const bool& fitIntercept)
+                                   const bool& fitIntercept) :
+                                   fitIntercept(fitIntercept)
 {
   LinearRegressionFunction lrf(dataset, labels, fitIntercept);
   parameters = lrf.initialParameters();
@@ -45,7 +48,19 @@ LinearRegression::LinearRegression(const arma::mat& dataset,
 void LinearRegression::Compute(const arma::mat& dataset,
                                arma::mat& labels)
 {
-  labels = dataset * parameters;
+  std::cout << parameters;
+  if (!fitIntercept)
+  {
+    labels =  (parameters * dataset).t();
+  }
+  else
+  {
+    // TODO: THIS CAN BE IMPROVED.
+    arma::mat data = arma::ones<arma::mat>(dataset.n_rows + 1, dataset.n_cols);
+    data.submat(0, 0, dataset.n_rows - 1, dataset.n_cols - 1) = dataset;
+
+    labels = (parameters * data).t();
+  }
 }
 
 } // namespace regression

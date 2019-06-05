@@ -208,6 +208,7 @@ TEST_CASE("Gradient", "[LinearRegressionFunctionTest]")
 
   arma::mat parameters = "1 1";
   arma::mat gradient = dataset * (parameters * dataset  - labels.t()).t() / dataset.n_cols;
+  gradient = gradient.t();
 
   arma::mat evaluatedGradient;
   lrf.Gradient(parameters, evaluatedGradient);
@@ -219,6 +220,7 @@ TEST_CASE("Gradient", "[LinearRegressionFunctionTest]")
 
   parameters = "42.43 -34.5";
   gradient = dataset * (parameters * dataset  - labels.t()).t() / dataset.n_cols;
+  gradient = gradient.t();
 
   lrf.Gradient(parameters, evaluatedGradient);
 
@@ -252,6 +254,7 @@ TEST_CASE("GradientIntercept", "[LinearRegressionFunctionTest]")
 
   arma::mat parameters = "1 1 1";
   arma::mat gradient = data * (parameters * data  - labels.t()).t() / data.n_cols;
+  gradient = gradient.t();
 
   arma::mat evaluatedGradient;
   lrf.Gradient(parameters, evaluatedGradient);
@@ -262,7 +265,7 @@ TEST_CASE("GradientIntercept", "[LinearRegressionFunctionTest]")
   }
 }
 
-TEST_CASE("SeparableGradient", "[LinearRegressionFunction]")
+TEST_CASE("SeparableGradient", "[LinearRegressionFunctionTest]")
 {
   // Import the dataset.
   arma::mat dataset;
@@ -287,6 +290,7 @@ TEST_CASE("SeparableGradient", "[LinearRegressionFunction]")
   for (int i = 0; i < dataset.n_cols; ++i)
   {
     gradient = dataset.col(i) * (parameters * dataset.col(i)  - arma::accu(labels.row(i)));
+    gradient = gradient.t();
 
     arma::mat evaluatedGradient;
     lrf.Gradient(parameters, i, evaluatedGradient);
@@ -302,6 +306,7 @@ TEST_CASE("SeparableGradient", "[LinearRegressionFunction]")
   for (int i = 0; i < dataset.n_cols; ++i)
   {
     gradient = dataset.col(i) * (parameters * dataset.col(i)  - arma::accu(labels.row(i)));
+    gradient = gradient.t();
 
     arma::mat evaluatedGradient;
     lrf.Gradient(parameters, i, evaluatedGradient);
@@ -342,6 +347,7 @@ TEST_CASE("SeparableGradientIntercept", "[LinearRegressionFunctionTest]")
   for (int i = 0; i < dataset.n_cols; ++i)
   {
     gradient = data.col(i) * (parameters * data.col(i)  - arma::accu(labels.row(i)));
+    gradient = gradient.t();
 
     arma::mat evaluatedGradient;
     lrf.Gradient(parameters, i, evaluatedGradient);
@@ -357,6 +363,7 @@ TEST_CASE("SeparableGradientIntercept", "[LinearRegressionFunctionTest]")
   for (int i = 0; i < dataset.n_cols; ++i)
   {
     gradient = data.col(i) * (parameters * data.col(i)  - arma::accu(labels.row(i)));
+    gradient = gradient.t();
 
     arma::mat evaluatedGradient;
     lrf.Gradient(parameters, i, evaluatedGradient);
@@ -367,4 +374,29 @@ TEST_CASE("SeparableGradientIntercept", "[LinearRegressionFunctionTest]")
       REQUIRE(std::abs(gradient(j) - evaluatedGradient(j)) <= 1e-3);
     }
   }
+}
+
+TEST_CASE("Regression", "[LinearRegressionTest]")
+{
+  // Import the dataset.
+  arma::mat dataset;
+  if (!dataset.load("data/linreg.csv", arma::csv_ascii))
+  {
+    FAIL("couldn't load data");
+    return;
+  }
+
+  // Take the labels column out.
+  arma::vec labels = dataset.col(2);
+
+  // Remove the labels column from dataset.
+  dataset = dataset.cols(0, 1).t();
+
+  LinearRegression lr(dataset, labels, true);
+
+  arma::vec pred;
+  lr.Compute(dataset, pred);
+
+  std::cout << pred;
+  REQUIRE(false);
 }
