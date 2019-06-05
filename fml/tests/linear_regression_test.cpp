@@ -154,7 +154,7 @@ TEST_CASE("SeprableEvaluateIntercept", "[LinearRegressionFunctionTest]")
   dataset = dataset.cols(0, 1).t();
 
   // Testing without intercept parameter.
-  LinearRegressionFunction lrf(dataset, labels, false);
+  LinearRegressionFunction lrf(dataset, labels, true);
 
   arma::mat parameters = "1 1 1";
   double score = 0;
@@ -185,26 +185,4 @@ TEST_CASE("SeprableEvaluateIntercept", "[LinearRegressionFunctionTest]")
   score /= dataset.n_cols;
 
   REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-3);
-}
-
-TEST_CASE("LinearRegressionTest", "[LinearRegressionFunction]")
-{
-  arma::mat dataset;
-  if (!dataset.load("data/linreg.csv", arma::csv_ascii))
-  {
-    FAIL("couldn't load data");
-    return;
-  }
-
-  arma::vec labels = dataset.col(2);
-
-  dataset = dataset.cols(0, 1).t();
-
-  LinearRegression lr(dataset, labels, true);
-  arma::vec pred;
-
-  lr.Compute(dataset, pred);
-
-  std::cout << pred;
-  REQUIRE(false);
 }
