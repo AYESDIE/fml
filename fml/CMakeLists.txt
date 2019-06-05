@@ -1,0 +1,4 @@
+include_directories(..)
+
+add_executable(test
+        main.cpp)
