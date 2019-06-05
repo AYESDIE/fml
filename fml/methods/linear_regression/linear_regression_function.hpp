@@ -69,8 +69,9 @@ double LinearRegressionFunction::Evaluate(const arma::mat& parameters)
 
   score = score.t() - labels;
   score %= score;
+  score /= dataset.n_cols * 2;
 
-  return arma::accu(score) / (dataset.n_cols * 2);
+  return arma::accu(score);
 }
 
 double LinearRegressionFunction::Evaluate(const arma::mat& parameters,
