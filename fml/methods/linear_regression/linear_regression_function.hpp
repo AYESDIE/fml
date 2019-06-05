@@ -79,19 +79,23 @@ double LinearRegressionFunction::Evaluate(const arma::mat& parameters,
 {
   // Loss is evaluated as
   // (1/m)Σ (h(x) - y)
-  double score;
+  arma::mat score;
 
   if (!fitIntercept)
   {
-    score = arma::accu(parameters * dataset.col(id));
+    score = parameters * dataset;
   }
   else
   {
-    score = arma::accu(parameters.head_cols(dataset.n_rows) * dataset.col(id) +
-        parameters.col(dataset.n_rows - 1));
+    score = parameters.head_cols(dataset.n_rows) * dataset +
+        arma::accu(parameters.col(dataset.n_rows));
   }
 
-  return std::pow(score - labels(id), 2) / 2;
+
+  score = score.t() - labels;
+  score %= score;
+
+  return score(id) / 2;
 }
 
 void LinearRegressionFunction::Gradient(const arma::mat& parameters,

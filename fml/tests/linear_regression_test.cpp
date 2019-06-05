@@ -28,22 +28,22 @@ TEST_CASE("Evaluate", "[LinearRegressionFunctionTest]")
   arma::mat parameters = "1 1";
   arma::mat score = (parameters * dataset) - labels.t();
   score %= score;
-  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-3);
 
   parameters = "12 14";
   score = (parameters * dataset) - labels.t();
   score %= score;
-  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-3);
 
   parameters = "3.9 -0.64";
   score = (parameters * dataset) - labels.t();
   score %= score;
-  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-3);
 
   parameters = "-92 -0.89";
   score = (parameters * dataset) - labels.t();
   score %= score;
-  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-3);
 }
 
 TEST_CASE("InterceptEvaluate", "[LinearRegressionFunctionTest]")
@@ -69,22 +69,22 @@ TEST_CASE("InterceptEvaluate", "[LinearRegressionFunctionTest]")
   arma::mat parameters = "1 1 1";
   arma::mat score = (parameters.cols(0, 1) * dataset + arma::accu(parameters.col(2))) - labels.t();
   score %= score;
-  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-3);
 
   parameters = "190 14 -11";
   score = (parameters.cols(0, 1) * dataset + arma::accu(parameters.col(2))) - labels.t();
   score %= score;
-  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-3);
 
   parameters = "-12 4 4.43";
   score = (parameters.cols(0, 1) * dataset + arma::accu(parameters.col(2))) - labels.t();
   score %= score;
-  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-3);
 
   parameters = "0.42 -8.3 2.7";
   score = (parameters.cols(0, 1) * dataset + arma::accu(parameters.col(2))) - labels.t();
   score %= score;
-  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(arma::accu(score) / (2 * dataset.n_cols) - lrf.Evaluate(parameters)) <= 1e-3);
 }
 
 TEST_CASE("SeparableEvaluate", "[LinearRegressionFunctionTest]")
@@ -114,7 +114,7 @@ TEST_CASE("SeparableEvaluate", "[LinearRegressionFunctionTest]")
   }
   score /= dataset.n_cols;
 
-  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-3);
 
   parameters = "12 84";
   score = 0;
@@ -124,7 +124,7 @@ TEST_CASE("SeparableEvaluate", "[LinearRegressionFunctionTest]")
   }
   score /= dataset.n_cols;
 
-  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-3);
 
   parameters = "-65 -4.34";
   score = 0;
@@ -134,7 +134,7 @@ TEST_CASE("SeparableEvaluate", "[LinearRegressionFunctionTest]")
   }
   score /= dataset.n_cols;
 
-  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-3);
 }
 
 TEST_CASE("SeprableEvaluateIntercept", "[LinearRegressionFunctionTest]")
@@ -153,42 +153,38 @@ TEST_CASE("SeprableEvaluateIntercept", "[LinearRegressionFunctionTest]")
   // Remove the labels column from dataset.
   dataset = dataset.cols(0, 1).t();
 
-
   // Testing without intercept parameter.
-  LinearRegressionFunction lrf(dataset, labels, true);
+  LinearRegressionFunction lrf(dataset, labels, false);
 
-  arma::mat parameters = "0 0 0";
+  arma::mat parameters = "1 1 1";
   double score = 0;
   for (int i = 0; i < dataset.n_cols; ++i)
   {
     score += lrf.Evaluate(parameters, i);
   }
-  score /= dataset.n_rows;
+  score /= dataset.n_cols;
 
-  std::cout << score;
-  std::cout << "aa" << lrf.Evaluate(parameters);
+  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-3);
 
-  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-5);
+  parameters = "12 84 -53";
+  score = 0;
+  for (int i = 0; i < dataset.n_cols; ++i)
+  {
+    score += lrf.Evaluate(parameters, i);
+  }
+  score /= dataset.n_cols;
 
-//  parameters = "8.32 5.23 -1.3204";
-//  score = 0;
-//  for (int i = 0; i < dataset.n_cols; ++i)
-//  {
-//    score += lrf.Evaluate(parameters, i);
-//  }
-//  score /= dataset.n_rows;
-//
-//  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-5);
-//
-//  parameters = "-32.61 -234.23 -0.43";
-//  score = 0;
-//  for (int i = 0; i < dataset.n_cols; ++i)
-//  {
-//    score += lrf.Evaluate(parameters, i);
-//  }
-//  score /= dataset.n_rows;
-//
-//  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-5);
+  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-3);
+
+  parameters = "-65 -4.34 -8.9";
+  score = 0;
+  for (int i = 0; i < dataset.n_cols; ++i)
+  {
+    score += lrf.Evaluate(parameters, i);
+  }
+  score /= dataset.n_cols;
+
+  REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-3);
 }
 
 TEST_CASE("LinearRegressionTest", "[LinearRegressionFunction]")
