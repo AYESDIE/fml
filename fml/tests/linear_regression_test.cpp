@@ -186,3 +186,100 @@ TEST_CASE("SeprableEvaluateIntercept", "[LinearRegressionFunctionTest]")
 
   REQUIRE(std::abs(score - lrf.Evaluate(parameters)) <= 1e-3);
 }
+
+TEST_CASE("Gradient", "[LinearRegressionFunctionTest]")
+{
+  // Import the dataset.
+  arma::mat dataset;
+  if (!dataset.load("data/linreg.csv", arma::csv_ascii))
+  {
+    FAIL("couldn't load data");
+    return;
+  }
+
+  // Take the labels column out.
+  arma::vec labels = dataset.col(2);
+
+  // Remove the labels column from dataset.
+  dataset = dataset.cols(0, 1).t();
+
+  // Testing without intercept parameter.
+  LinearRegressionFunction lrf(dataset, labels, false);
+
+  arma::mat parameters = "1 1";
+  arma::mat gradient = dataset * (parameters * dataset  - labels.t()).t() / dataset.n_cols;
+
+  arma::mat evaluatedGradient;
+  lrf.Gradient(parameters, evaluatedGradient);
+
+  for (int i = 0; i < evaluatedGradient.n_elem; ++i)
+  {
+    REQUIRE(std::abs(evaluatedGradient(i) - gradient(i)) <= 1e-3);
+  }
+
+  parameters = "42.43 -34.5";
+  gradient = dataset * (parameters * dataset  - labels.t()).t() / dataset.n_cols;
+
+  lrf.Gradient(parameters, evaluatedGradient);
+
+  for (int i = 0; i < evaluatedGradient.n_elem; ++i)
+  {
+    REQUIRE(std::abs(evaluatedGradient(i) - gradient(i)) <= 1e-3);
+  }
+}
+
+TEST_CASE("GradientIntercept", "[LinearRegressionFunctionTest]")
+{
+  // Import the dataset.
+  arma::mat dataset;
+  if (!dataset.load("data/linreg.csv", arma::csv_ascii))
+  {
+    FAIL("couldn't load data");
+    return;
+  }
+
+  // Take the labels column out.
+  arma::vec labels = dataset.col(2);
+
+  // Remove the labels column from dataset.
+  dataset = dataset.cols(0, 1).t();
+
+  // Testing without intercept parameter.
+  LinearRegressionFunction lrf(dataset, labels, true);
+
+  arma::mat data = arma::ones<arma::mat>(dataset.n_rows + 1, dataset.n_cols);
+  data.submat(0, 0, dataset.n_rows - 1, dataset.n_cols - 1) = dataset;
+
+  arma::mat parameters = "1 1 1";
+  arma::mat gradient = data * (parameters * data  - labels.t()).t() / data.n_cols;
+
+  arma::mat evaluatedGradient;
+  lrf.Gradient(parameters, evaluatedGradient);
+  REQUIRE(arma::size(evaluatedGradient) == arma::size(gradient));
+  for (int i = 0; i < gradient.n_elem; ++i)
+  {
+    REQUIRE(std::abs(gradient(i) - evaluatedGradient(i)) <= 1e-3);
+  }
+}
+
+TEST_CASE("SeparableGradient", "[LinearRegressionFunction]")
+{
+  // Import the dataset.
+  arma::mat dataset;
+  if (!dataset.load("data/linreg.csv", arma::csv_ascii))
+  {
+    FAIL("couldn't load data");
+    return;
+  }
+
+  // Take the labels column out.
+  arma::vec labels = dataset.col(2);
+
+  // Remove the labels column from dataset.
+  dataset = dataset.cols(0, 1).t();
+
+  // Testing without intercept parameter.
+  LinearRegressionFunction lrf(dataset, labels, false);
+
+  REQUIRE(false);
+}

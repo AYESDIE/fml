@@ -81,6 +81,7 @@ double LinearRegressionFunction::Evaluate(const arma::mat& parameters,
   // (1/m)Σ (h(x) - y)
   arma::mat score;
 
+  // TODO: THIS PART CAN BE IMPROVED.
   if (!fitIntercept)
   {
     score = parameters * dataset;
@@ -106,16 +107,18 @@ void LinearRegressionFunction::Gradient(const arma::mat& parameters,
   if (!fitIntercept)
   {
     score = parameters * dataset;
+    score = score.t() - labels;
+    gradient = dataset * score / dataset.n_cols;
   }
   else
   {
-    score = parameters.head_cols(dataset.n_rows) * dataset +
-        arma::accu(parameters.col(dataset.n_rows));
+    // TODO: THIS PART CAN BE IMPROVED.
+    arma::mat data = arma::ones<arma::mat>(dataset.n_rows + 1, dataset.n_cols);
+    data.submat(0, 0, dataset.n_rows - 1, dataset.n_cols - 1) = dataset;
+
+    gradient = data * (parameters * data  - labels.t()).t() / data.n_cols;
   }
 
-  score = score.t() - labels;
-
-  gradient = dataset * score / dataset.n_cols;
 }
 
 void LinearRegressionFunction::Gradient(const arma::mat& parameters,
