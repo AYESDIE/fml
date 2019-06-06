@@ -1,20 +1,11 @@
-#include <iostream>
-#include "xtensor/xarray.hpp"
-#include "xtensor/xio.hpp"
-#include "xtensor/xview.hpp"
+// This will be used for testing purpose till we
+// don't have a proper build system using CMake.
+
+
+#include "fml.hpp"
 
 int main()
 {
-  xt::xarray<double> arr1
-      {{1.0, 2.0, 3.0},
-       {2.0, 5.0, 7.0},
-       {2.0, 5.0, 7.0}};
-
-  xt::xarray<double> arr2
-  {5.0, 6.0, 7.0};
-
-  xt::xarray<double> res = xt::view(arr1, 1) + arr2;
-
-  std::cout << res;
+  std::cout << "kek";
   return 0;
-};
+}

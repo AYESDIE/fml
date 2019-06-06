@@ -1,16 +1,9 @@
-cmake_minimum_required(VERSION 3.0)
-project(fml CXX)
-
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/CMake")
+cmake_minimum_required(VERSION 3.1)
+project(fml)
 
 find_package(xtl REQUIRED)
 find_package(xtensor REQUIRED)
+# if xtensor was built with xsimd support:
+# find_package(xsimd REQUIRED)
 
-set(DIRS
-    fml)
-
-foreach(dir ${DIRS})
-    add_subdirectory(${dir})
-endforeach()
-
-
+add_subdirectory(fml)

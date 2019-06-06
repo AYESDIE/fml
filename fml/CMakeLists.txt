@@ -1,4 +1,8 @@
 include_directories(..)
 
+
 add_executable(test
-        main.cpp)
+        main.cpp
+        fml.hpp)
+
+target_link_libraries(test fml)
