@@ -2,7 +2,7 @@
 // don't have a proper build system using CMake.
 
 #include <iostream>
-#include "../fml.hpp"
+#include <fml/core.hpp>
 
 //#define CATCH_CONFIG_MAIN  // catch.hpp will define main()
 #define CATCH_CONFIG_RUNNER  // we will define main()

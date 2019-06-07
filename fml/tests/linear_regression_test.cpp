@@ -2,9 +2,8 @@
 // Created by ayesdie on 7/6/19.
 //
 
-#include "../fml.hpp"
-#include "../methods/linear_regression/linear_regression.hpp"
-#include "../methods/optimizer/gradient_descent/gradient_descent.hpp"
+#include <fml/methods/linear_regression/linear_regression.hpp>
+#include <fml/methods/optimizer/gradient_descent/gradient_descent.hpp>
 
 #include "catch.hpp"
 

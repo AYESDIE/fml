@@ -5,7 +5,7 @@
 #ifndef FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_FUNCTION_HPP
 #define FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_FUNCTION_HPP
 
-#include "../../fml.hpp"
+#include "../../core.hpp"
 
 namespace fml {
 namespace regression {
