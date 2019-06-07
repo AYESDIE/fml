@@ -1,5 +1,5 @@
 set(DIRS
-    optimizer
+    optimizers
     linear_regression)
 
 foreach(dir ${DIRS})

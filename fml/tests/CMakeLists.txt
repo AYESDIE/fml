@@ -11,7 +11,7 @@ add_executable(${PROJECT_NAME} ${FML_TESTS_SOURCES})
 add_custom_command(TARGET ${PROJECT_NAME}
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/data/
-    ${CMAKE_BINARY_DIR}/data/
+    ${CMAKE_BINARY_DIR}/fml/tests/data/
     )
 
 target_link_libraries(fml_tests
