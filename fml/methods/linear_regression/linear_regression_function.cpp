@@ -15,15 +15,22 @@ LinearRegressionFunction::LinearRegressionFunction(const xt::xarray<double>& dat
 
 double LinearRegressionFunction::Evaluate(const xt::xarray<double>& parameters)
 {
-  auto loss = xt::linalg::dot(dataset, parameters) - labels;
-  return xt::linalg::dot(xt::transpose(loss), loss)(0, 0) / (2 * numFunctions());
+  // Evaluates the error between the evaluated values and
+  // actual values.
+  auto error = xt::linalg::dot(dataset, parameters) - labels;
+
+  // Calculates the mean squared error.
+  return xt::linalg::dot(xt::transpose(error), error)(0, 0)
+      / (2 * numFunctions());
 }
 
 void LinearRegressionFunction::Gradient(const xt::xarray<double>& parameters,
                                         xt::xarray<double>& gradient)
 {
-  auto loss = xt::linalg::dot(dataset, parameters) - labels;
-  gradient = xt::linalg::dot(xt::transpose(dataset), loss) / numFunctions();
+  // Evaluates the error between the evaluated values and
+  // actual values.
+  auto error = xt::linalg::dot(dataset, parameters) - labels;
+  gradient = xt::linalg::dot(xt::transpose(dataset), error) / numFunctions();
 }
 
 size_t LinearRegressionFunction::numFunctions()
@@ -35,5 +42,6 @@ xt::xarray<double> LinearRegressionFunction::GetInitialPoints()
 {
   return xt::ones<xt::xarray<double>>({int(dataset.shape(1)), 1});
 }
-}
-}
+
+} // namespace regression
+} // namespace fml

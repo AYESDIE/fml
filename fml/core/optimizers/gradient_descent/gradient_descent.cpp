@@ -28,5 +28,5 @@ GradientDescent::GradientDescent(double stepSize,
                                  tolerance(tolerance)
 { /* does nothing */ }
 
-}
-}
+} // namespace optimizer
+} // namespace fml

@@ -45,6 +45,7 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
     xt::xarray<double> gradient;
     function.Gradient(iterate, gradient);
 
+    // Update the iterate values.
     iterate -= stepSize * gradient;
 
     lastObjective = overallObjective;
@@ -55,7 +56,7 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
   return overallObjective;
 }
 
-}
-}
+} // namespace optimizer
+} // namespace fml
 
 #endif //FML_OPTIMIZER_GRADIENT_DESCENT_GRADIENT_DESCENT_IMPL_HPP

@@ -28,11 +28,9 @@ void LinearRegression::Compute(const xt::xarray<double>& dataset,
                                xt::xarray<double>& labels)
 {
   labels = xt::linalg::dot(dataset, parameters);
-
-
 }
 
-}
-}
+} // namespace regression
+} // namespace fml
 
 
