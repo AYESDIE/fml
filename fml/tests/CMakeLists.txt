@@ -3,6 +3,7 @@ project(fml_tests CXX)
 set(FML_TESTS_SOURCES
     main.cpp
     linear_regression_test.cpp
+    gradient_descent_test.cpp
     )
 
 add_executable(${PROJECT_NAME} ${FML_TESTS_SOURCES})
@@ -15,4 +16,6 @@ add_custom_command(TARGET ${PROJECT_NAME}
     )
 
 target_link_libraries(fml_tests
-    fml)
+    fml
+    ${BLAS_LIBRARIES}
+    ${LAPACK_LIBRARIES})

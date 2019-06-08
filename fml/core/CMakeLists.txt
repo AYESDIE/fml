@@ -1,5 +1,5 @@
 set(DIRS
-    linear_regression)
+    optimizers)
 
 foreach(dir ${DIRS})
     add_subdirectory(${dir})

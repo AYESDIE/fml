@@ -4,7 +4,7 @@
 
 #include "linear_regression.hpp"
 #include "linear_regression_function.hpp"
-#include "../optimizer/gradient_descent/gradient_descent.hpp"
+#include "../../core/optimizers/gradient_descent/gradient_descent.hpp"
 
 namespace fml {
 namespace regression {
@@ -13,7 +13,9 @@ LinearRegression::LinearRegression(const xt::xarray<double> &dataset,
 {
   LinearRegressionFunction lrf(dataset, labels);
 
-  fml::optimizer::GradientDescent gd;
+  parameters = lrf.GetInitialPoints();
+
+  fml::optimizer::GradientDescent gd(0.01, 5000000, 1e-9);
   std::cout << "Linear Regression: Start" << std::endl;
   double overallObjective = gd.Optimize(lrf, parameters);
   std::cout << "Linear Regression: Stop" << std::endl;
@@ -22,11 +24,15 @@ LinearRegression::LinearRegression(const xt::xarray<double> &dataset,
 }
 
 
-void LinearRegression::Compute(const xt::xarray<double> &dataset,
-                               xt::xarray<double> &labels)
+void LinearRegression::Compute(const xt::xarray<double>& dataset,
+                               xt::xarray<double>& labels)
 {
+  labels = xt::linalg::dot(dataset, parameters);
+
 
 }
 
 }
 }
+
+

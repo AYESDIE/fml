@@ -23,6 +23,8 @@ public:
 
   size_t numFunctions();
 
+  xt::xarray<double> GetInitialPoints();
+
 private:
   xt::xarray<double> dataset;
 

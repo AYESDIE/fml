@@ -5,6 +5,8 @@
 #ifndef FML_OPTIMIZER_GRADIENT_DESCENT_GRADIENT_DESCENT_IMPL_HPP
 #define FML_OPTIMIZER_GRADIENT_DESCENT_GRADIENT_DESCENT_IMPL_HPP
 
+#include "gradient_descent.hpp"
+
 namespace fml {
 namespace optimizer {
 

@@ -24,7 +24,10 @@
 #include <xtensor/xview.hpp>
 #include <xtensor/xmanipulation.hpp>
 #include <xtensor/xcsv.hpp>
+#include <xtensor/xmath.hpp>
+#include <xtensor/xfunction.hpp>
+#include <xtensor/xrandom.hpp>
 
-#include "methods/optimizer/gradient_descent/gradient_descent.hpp"
+#include <xtensor-blas/xlinalg.hpp> // TODO
 
 #endif //FML_HPP

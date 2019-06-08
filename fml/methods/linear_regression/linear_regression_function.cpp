@@ -15,19 +15,25 @@ LinearRegressionFunction::LinearRegressionFunction(const xt::xarray<double>& dat
 
 double LinearRegressionFunction::Evaluate(const xt::xarray<double>& parameters)
 {
-  return xt::sum(dataset * parameters)() / (2 * numFunctions());
+  auto loss = xt::linalg::dot(dataset, parameters) - labels;
+  return xt::linalg::dot(xt::transpose(loss), loss)(0, 0) / (2 * numFunctions());
 }
 
 void LinearRegressionFunction::Gradient(const xt::xarray<double>& parameters,
                                         xt::xarray<double>& gradient)
 {
-  gradient = xt::transpose(dataset) *
-      ((dataset * parameters) - labels);
+  auto loss = xt::linalg::dot(dataset, parameters) - labels;
+  gradient = xt::linalg::dot(xt::transpose(dataset), loss) / numFunctions();
 }
 
 size_t LinearRegressionFunction::numFunctions()
 {
-  return dataset.dimension();
+  return dataset.shape(0);
+}
+
+xt::xarray<double> LinearRegressionFunction::GetInitialPoints()
+{
+  return xt::ones<xt::xarray<double>>({int(dataset.shape(1)), 1});
 }
 }
 }

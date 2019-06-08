@@ -4,6 +4,7 @@ include_directories(..) # <fml/[whatever]>
 set(${FML_SRCS} ${FML_SRCS} "core.hpp")
 
 set(DIRS
+    core
     methods
     tests
     )
@@ -20,8 +21,8 @@ endif (WIN32)
 
 set_target_properties(fml
         PROPERTIES
-        VERSION 1.0
-        SOVERSION 1
+        VERSION 0.0
+        SOVERSION 0
         )
 
 # Collect all header files in the library.

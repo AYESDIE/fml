@@ -7,8 +7,20 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(xtl REQUIRED)
 find_package(xtensor REQUIRED)
+find_package(xtensor-blas REQUIRED)
 # if xtensor was built with xsimd support:
 # find_package(xsimd REQUIRED)
+
+if (WIN32)
+    find_package(OpenBLAS REQUIRED)
+    set(BLAS_LIBRARIES ${CMAKE_INSTALL_PREFIX}${OpenBLAS_LIBRARIES})
+else()
+    find_package(BLAS REQUIRED)
+    find_package(LAPACK REQUIRED)
+endif()
+
+message(STATUS "BLAS VENDOR:    " ${BLA_VENDOR})
+message(STATUS "BLAS LIBRARIES: " ${BLAS_LIBRARIES})
 
 add_subdirectory(fml)
 
