@@ -15,10 +15,19 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <istream>
+#include <fstream>
 #include <vector>
 
 #include <xtensor/xarray.hpp>
 #include <xtensor/xio.hpp>
 #include <xtensor/xview.hpp>
+#include <xtensor/xmanipulation.hpp>
+#include <xtensor/xcsv.hpp>
+#include <xtensor/xmath.hpp>
+#include <xtensor/xfunction.hpp>
+#include <xtensor/xrandom.hpp>
+
+#include <xtensor-blas/xlinalg.hpp> // TODO
 
 #endif //FML_HPP
