@@ -3,16 +3,10 @@
 //
 
 #include <fml/methods/linear_regression/linear_regression.hpp>
+#include <fml/core/math/normalize.hpp>
 #include "catch.hpp"
 
 using namespace fml;
-
-static void scale(xt::xarray<double>& X,
-                  double x_min,
-                  double x_max)
-{
-  return;
-}
 
 TEST_CASE("LinearRegression","[LinearRegression]")
 {
@@ -24,8 +18,11 @@ TEST_CASE("LinearRegression","[LinearRegression]")
   in_file.open("data/res.csv");
   auto result = xt::load_csv<double>(in_file);
 
-  auto labels = xt::view(dataset, xt::all(), xt::keep(2));
-  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1));
+  auto labels = xt::view(dataset, xt::all(), xt::keep(3));
+  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+
+  data = fml::math::Normalize(data, xt::xarray<size_t> {0, 1, 2});
+  std::cout << data;
 
   fml::regression::LinearRegression lr(data, labels);
 
@@ -38,27 +35,4 @@ TEST_CASE("LinearRegression","[LinearRegression]")
   {
     REQUIRE(*prediter == Approx(*resultiter).margin(1e-5));
   }
-}
-
-TEST_CASE("LinearRegression2","[LinearRegression]")
-{
-  auto data = xt::xarray<double>
-      {{1, 1},
-       {1, 3},
-       {1, 4},
-       {1, 5},
-       {1, 6},
-       {1, 8},
-       {1, 10}};
-  auto labels = xt::xarray<double>
-      {{10, 3, 5, 3.5, 7, 9.2, 9}};
-  std::cout << "\ndata\n" << data;
-  labels = xt::transpose(labels);
-  std::cout << "\nlabels\n" << labels;
-
-  fml::regression::LinearRegression lr(data, labels);
-
-  xt::xarray<double> lab;
-  lr.Compute(data, lab);
-  std::cout << lab;
 }
