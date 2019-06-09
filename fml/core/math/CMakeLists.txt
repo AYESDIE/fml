@@ -1,7 +1,5 @@
 set(SOURCES
-    gradient_descent.cpp
-    gradient_descent.hpp
-    gradient_descent_impl.hpp)
+    normalize.hpp)
 
 set(DIR_SRCS)
 foreach(file ${SOURCES})

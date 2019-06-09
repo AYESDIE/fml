@@ -27,6 +27,7 @@
 #include <xtensor/xmath.hpp>
 #include <xtensor/xfunction.hpp>
 #include <xtensor/xrandom.hpp>
+#include <xtensor/xnorm.hpp>
 
 #include <xtensor-blas/xlinalg.hpp> // TODO
 
