@@ -15,7 +15,7 @@ LogisticRegression::LogisticRegression(const xt::xarray<double> &dataset,
 
   parameters = lrf.GetInitialPoints();
 
-  fml::optimizer::GradientDescent gd(0.01, 5000000, 1e-9);
+  fml::optimizer::GradientDescent gd(0.01, 5000000, 1e-5);
   std::cout << "Linear Regression: Start" << std::endl;
   double overallObjective = gd.Optimize(lrf, parameters);
   std::cout << "Linear Regression: Stop" << std::endl;

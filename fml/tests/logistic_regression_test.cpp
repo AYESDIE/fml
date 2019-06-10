@@ -13,8 +13,8 @@ TEST_CASE("Evaluate", "[LogisticRegressionFunction]")
   in_file.open("data/logistictest.csv");
   xt::xarray<double> dataset = xt::load_csv<double>(in_file);
 
-  xt::xarray<size_t> labels = xt::view(dataset, xt::all(), xt::keep(2));
-  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1));
+  xt::xarray<size_t> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
   fml::regression::LogisticRegression lr(data, labels);
   xt::xarray<size_t> lab;
