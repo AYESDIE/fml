@@ -1,6 +1,8 @@
 set(SOURCES
     logistic_regression_function.hpp
-    logistic_regression_function.cpp)
+    logistic_regression_function.cpp
+    logistic_regression.cpp
+    logistic_regression.hpp)
 
 set(DIR_SRCS)
 foreach(file ${SOURCES})

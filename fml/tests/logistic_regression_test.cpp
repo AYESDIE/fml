@@ -2,7 +2,7 @@
 // Created by ayesdie on 10/6/19.
 //
 
-#include <fml/methods/logistic_regression/logistic_regression_function.hpp>
+#include <fml/methods/logistic_regression/logistic_regression.hpp>
 #include "catch.hpp"
 
 using namespace fml;
@@ -16,10 +16,23 @@ TEST_CASE("Evaluate", "[LogisticRegressionFunction]")
   xt::xarray<size_t> labels = xt::view(dataset, xt::all(), xt::keep(2));
   auto data = xt::view(dataset, xt::all(), xt::keep(0, 1));
 
+  fml::regression::LogisticRegression lr(data, labels);
+  xt::xarray<size_t> lab;
+  auto score = lr.Compute(data, lab);
 
-  fml::regression::LogisticRegressionFunction lr(data, labels);
+  auto iter = score.begin();
+  auto labeliter = labels.begin();
 
-  xt::xarray<double> params = lr.GetInitialPoints();
-  xt::xarray<double> grx;
-  lr.Gradient(params, grx);
+  size_t correct = 0;
+  size_t total = 0;
+  for (; iter != score.end(); ++iter, ++labeliter)
+  {
+    total++;
+    if ((*iter <= 0.5) && (*labeliter == 0))
+      correct++;
+    else if ((*iter > 0.5) && (*labeliter == 1))
+      correct++;
+  }
+
+  std::cout << correct << " / " << total;
 }
