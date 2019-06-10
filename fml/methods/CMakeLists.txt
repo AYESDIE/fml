@@ -1,5 +1,6 @@
 set(DIRS
-    linear_regression)
+    linear_regression
+    logistic_regression)
 
 foreach(dir ${DIRS})
     add_subdirectory(${dir})
