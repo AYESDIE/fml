@@ -15,16 +15,17 @@ LogisticRegressionFunction::LogisticRegressionFunction(const xt::xarray<double>&
 
 double LogisticRegressionFunction::Evaluate(const xt::xarray<double>& parameters)
 {
-  return xt::sum(- (labels(0) * xt::log(1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)))))
-      - ((1 - labels(0)) * (1 - xt::log(1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)))))))()
+  return xt::sum(- (labels * xt::log(1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)))))
+      - ((1 - labels) * xt::log((1 - 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)))))))()
       / numFunctions();
 }
 
 void LogisticRegressionFunction::Gradient(const xt::xarray<double>& parameters,
                                   xt::xarray<double>& gradient)
 {
-  gradient = xt::linalg::dot(xt::transpose(dataset), (1
-      / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)))) - labels(0));
+  xt::xarray<double> sigmoid = 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
+  xt::xarray<double> error = labels - sigmoid;
+  gradient = xt::linalg::dot(xt::transpose(dataset), error) / numFunctions();
 }
 
 size_t LogisticRegressionFunction::numFunctions()
@@ -34,7 +35,7 @@ size_t LogisticRegressionFunction::numFunctions()
 
 xt::xarray<double> LogisticRegressionFunction::GetInitialPoints()
 {
-  return xt::ones<xt::xarray<double>>({int(dataset.shape(1)), 1});
+  return xt::zeros<xt::xarray<double>>({int(dataset.shape(1)), 1});
 }
 
 

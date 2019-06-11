@@ -14,12 +14,13 @@ LogisticRegression::LogisticRegression(const xt::xarray<double> &dataset,
   LogisticRegressionFunction lrf(dataset, labels);
 
   parameters = lrf.GetInitialPoints();
+  std::cout << parameters;
 
   fml::optimizer::GradientDescent gd(0.01, 5000000, 1e-5);
-  std::cout << "Linear Regression: Start" << std::endl;
+  std::cout << "Logistic Regression: Start" << std::endl;
   double overallObjective = gd.Optimize(lrf, parameters);
-  std::cout << "Linear Regression: Stop" << std::endl;
-  std::cout << "Linear Regression: Overall objective: "
+  std::cout << "Logistic Regression: Stop" << std::endl;
+  std::cout << "Logistic Regression: Overall objective: "
             << overallObjective << "." << std::endl;
 }
 
