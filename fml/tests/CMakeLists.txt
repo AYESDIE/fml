@@ -2,8 +2,7 @@ project(fml_tests CXX)
 
 set(FML_TESTS_SOURCES
     main.cpp
-    linear_regression_test.cpp
-    gradient_descent_test.cpp
+    logistic_regression_test.cpp
     )
 
 add_executable(${PROJECT_NAME} ${FML_TESTS_SOURCES})

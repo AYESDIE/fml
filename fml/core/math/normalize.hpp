@@ -40,6 +40,6 @@ xt::xarray<double> Normalize(xt::xarray<double> xexpression,
   return xexpression;
 }
 
-}
-}
+} // namespace math
+} // namespace fml
 #endif //FML_MATH_NORMALIZE_NORMALIZE_HPP
