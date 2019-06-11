@@ -63,15 +63,14 @@ TEST_CASE("er","[asda]")
 
   xt::xarray<size_t> labels = xt::view(dataset, xt::all(), xt::keep(3));
   auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
-  data = fml::math::Normalize(data, xt::xarray<size_t> ({0, 1, 2}));
 
   fml::regression::LogisticRegressionFunction lrf(data, labels);
 
-  xt::xarray<double> params = xt::transpose(xt::xarray<double> {{-0, -0.4, -25}});
+  xt::xarray<double> params = xt::transpose(xt::xarray<double> {{ -25.161272, 0.206233, 0.201470}});
   std::cout << params;
   std::cout << lrf.Evaluate(params);
 
   xt::xarray<double> grad;
   lrf.Gradient(params, grad);
-  std::cout << "\n\n\n" << grad;
+  std::cout << grad;
 }

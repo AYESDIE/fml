@@ -15,16 +15,16 @@ LogisticRegressionFunction::LogisticRegressionFunction(const xt::xarray<double>&
 
 double LogisticRegressionFunction::Evaluate(const xt::xarray<double>& parameters)
 {
-  return xt::sum(- (labels * xt::log(1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)))))
-      - ((1 - labels) * xt::log((1 - 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)))))))()
-      / numFunctions();
+  auto sigmoid =  1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
+  auto error = - (labels * xt::log(sigmoid)) - ((1 - labels) * xt::log(1 - sigmoid));
+  return xt::sum(error / numFunctions())();
 }
 
 void LogisticRegressionFunction::Gradient(const xt::xarray<double>& parameters,
-                                  xt::xarray<double>& gradient)
+                                          xt::xarray<double>& gradient)
 {
-  xt::xarray<double> sigmoid = 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
-  xt::xarray<double> error = labels - sigmoid;
+  auto sigmoid = 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
+  auto error = sigmoid - labels;
   gradient = xt::linalg::dot(xt::transpose(dataset), error) / numFunctions();
 }
 

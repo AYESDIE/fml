@@ -23,9 +23,7 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
   {
     overallObjective = function.Evaluate(iterate);
 
-    // Output the objective function.
-    std::cout << "Gradient Descent: iteration " << i << ", objective"
-              << overallObjective << "." << std::endl;
+
 
     if (std::isnan(overallObjective) || std::isinf(overallObjective))
     {
