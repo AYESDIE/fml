@@ -12,8 +12,8 @@ namespace regression {
 
 
 template<typename DatasetType, typename LabelsType>
-LogisticRegressionFunction<DatasetType, LabelsType>::LogisticRegressionFunction(DatasetType &dataset,
-                                                                                LabelsType &labels,
+LogisticRegressionFunction<DatasetType, LabelsType>::LogisticRegressionFunction(DatasetType& dataset,
+                                                                                LabelsType& labels,
                                                                                 const double lambda) :
                                                                                 dataset(dataset),
                                                                                 labels(labels),
@@ -22,7 +22,7 @@ LogisticRegressionFunction<DatasetType, LabelsType>::LogisticRegressionFunction(
 
 template<typename DatasetType, typename LabelsType>
 template<typename E>
-double LogisticRegressionFunction<DatasetType, LabelsType>::Evaluate(E &parameters)
+double LogisticRegressionFunction<DatasetType, LabelsType>::Evaluate(E& parameters)
 {
   // Evaluate the loss using sigmoid function
   auto sigmoid =  1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
@@ -37,9 +37,9 @@ double LogisticRegressionFunction<DatasetType, LabelsType>::Evaluate(E &paramete
 }
 
 template<typename DatasetType, typename LabelsType>
-template<typename E>
-void LogisticRegressionFunction<DatasetType, LabelsType>::Gradient(E &parameters,
-                                                                   xt::xarray<double> &gradient)
+template<typename E, typename G>
+void LogisticRegressionFunction<DatasetType, LabelsType>::Gradient(E& parameters,
+                                                                   G& gradient)
 {
   auto sigmoid = 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
   auto error = sigmoid - labels;

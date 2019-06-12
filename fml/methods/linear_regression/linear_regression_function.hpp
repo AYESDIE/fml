@@ -14,8 +14,8 @@ namespace regression {
 /**
  * This is the implementation of the Linear Regression Function.
  */
-template <typename DatasetType = xt::xarray<double>,
-          typename LabelsType = xt::xarray<double>>
+template <typename DatasetType = xt::xtensor<double, 2>,
+          typename LabelsType = xt::xtensor<double, 2>>
 class LinearRegressionFunction
 {
 public:
@@ -46,9 +46,9 @@ public:
    * @param parameters - Parameters for Linear Regression Function.
    * @param gradient - Evaluated gradient.
    */
-  template <typename E>
+  template <typename E, typename G>
   void Gradient(E& parameters,
-                xt::xarray<double>& gradient);
+                G& gradient);
 
   /**
    * Number of functions in the given dataset.
@@ -58,7 +58,7 @@ public:
   /**
    * Returns initial points for the parameters.
    */
-  xt::xarray<double> GetInitialPoints();
+  xt::xtensor<double, 2> GetInitialPoints();
 
 private:
   /// Dataset

@@ -22,9 +22,9 @@ public:
   template <typename E>
   double Evaluate(E& parameters);
 
-  template <typename E>
+  template <typename E, typename G>
   void Gradient(E& parameters,
-                xt::xarray<double>& gradient);
+                G& gradient);
 
   size_t numFunctions();
 

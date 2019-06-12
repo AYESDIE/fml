@@ -40,7 +40,7 @@ public:
 
 private:
   /// Parameters
-  xt::xarray<double> parameters;
+  xt::xtensor<double, 2> parameters;
 };
 
 } // namespace regression
