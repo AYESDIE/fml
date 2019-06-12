@@ -156,6 +156,35 @@ TEST_CASE("LogisticRegressionFunctionSimpleGradient","[LogisticRegressionFunctio
   REQUIRE(gradient(2, 0) == Approx(-5.25).margin(1e-5));
 }
 
+TEST_CASE("LogisticRegressionFunctionComplexGradient","[LogisticRegressionFunction]")
+{
+  std::ifstream in_file;
+  in_file.open("data/logistictest.csv");
+  auto dataset = xt::load_csv<double>(in_file);
+  in_file.close();
+
+  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+
+  LogisticRegressionFunction lrf(data, labels);
+  auto parameters = lrf.GetInitialPoints();
+
+  xt::xarray<double> gradient;
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == Approx(-0.100000).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(-12.009217).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(-11.262842).margin(1e-5));
+
+  // Value of parameter for which the function is optimized.
+  parameters = {{-25.161272, 0.206233, 0.201470}};
+  parameters = xt::transpose(parameters);
+
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == Approx(0.000003).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(0.000226).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(0.000122).margin(1e-5));
+}
+
 TEST_CASE("LogisticRegressionFunctionRegularizedGradient","[LogisticRegressionFunction]")
 {
   xt::xarray<double> data = {{1, 2, 3},
