@@ -3,7 +3,7 @@
 //
 
 #include <fml/methods/linear_regression/linear_regression.hpp>
-#include <fml/core/math/normalize.hpp>
+#include <fml/core.hpp>
 #include "catch.hpp"
 
 using namespace fml;
@@ -47,7 +47,7 @@ TEST_CASE("ComplexEvaluate", "[LinearRegressionFunction]")
   xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
   xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  fml::math::Normalize(data, 1, 2);
+  math::Normalize(data, 1, 2);
 
   LinearRegressionFunction<> lrf(data, labels);
 
@@ -198,7 +198,7 @@ TEST_CASE("ComplexGradient","[LinearRegressionFunction]")
   xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
   xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  fml::math::Normalize(data, 1, 2);
+  math::Normalize(data, 1, 2);
 
   LinearRegressionFunction<> lrf(data, labels);
   auto parameters = lrf.GetInitialPoints();
@@ -354,8 +354,8 @@ TEST_CASE("SimpleLinearRegression","[LinearRegression]")
   xt::xtensor<double, 2> labels =
       xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
 
-  fml::optimizer::GradientDescent gd(0.01, 1000000, 1e-15);
-  fml::regression::LinearRegression<xt::xtensor<double, 2>,
+  optimizer::GradientDescent gd(0.01, 1000000, 1e-15);
+  LinearRegression<xt::xtensor<double, 2>,
       xt::xtensor<double, 2>> lr(data, labels, gd);
 
   xt::xtensor<double, 2> pred;
@@ -383,10 +383,10 @@ TEST_CASE("ComplexLinearRegression","[LinearRegression]")
   xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
   xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  fml::math::Normalize(data, 0, 1, 2);
+  math::Normalize(data, 0, 1, 2);
 
-  fml::optimizer::GradientDescent gd;
-  fml::regression::LinearRegression<> lr(data, labels, gd);
+  optimizer::GradientDescent gd;
+  LinearRegression<> lr(data, labels, gd);
 
   xt::xarray<double> predictions;
   lr.Compute(data, predictions);

@@ -4,6 +4,7 @@ set(FML_TESTS_SOURCES
     main.cpp
     gradient_descent_test.cpp
     linear_regression_test.cpp
+    logistic_regression_test.cpp
     )
 
 add_executable(${PROJECT_NAME} ${FML_TESTS_SOURCES})

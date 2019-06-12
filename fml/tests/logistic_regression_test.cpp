@@ -3,7 +3,7 @@
 //
 
 #include <fml/methods/logistic_regression/logistic_regression.hpp>
-#include <fml/core/math/normalize.hpp>
+#include <fml/core.hpp>
 #include "catch.hpp"
 
 using namespace fml;
