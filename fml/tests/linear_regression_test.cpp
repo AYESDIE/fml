@@ -303,6 +303,47 @@ TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
 }
 
+TEST_CASE("TemplatizedGradient","[LinearRegressionFunction]")
+{
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+
+  LinearRegressionFunction<xt::xtensor<double, 2>> lrf(data, labels);
+
+  xt::xarray<double> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+
+  xt::xarray<double> gradient;
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == 123.5);
+  REQUIRE(gradient(1, 0) == 140.5);
+  REQUIRE(gradient(2, 0) == 157.5);
+
+  parameters = {{0, 0, 1./3}};
+  parameters = xt::transpose(parameters);
+
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == 0);
+  REQUIRE(gradient(1, 0) == 0);
+  REQUIRE(gradient(2, 0) == 0);
+
+  parameters = {{10., -204.5, 23.5}};
+  parameters = xt::transpose(parameters);
+
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == -7980.25);
+  REQUIRE(gradient(1, 0) == -9080.75);
+  REQUIRE(gradient(2, 0) == -10181.25);
+}
+
 TEST_CASE("LinearRegression","[LinearRegression]")
 {
   std::ifstream in_file;
