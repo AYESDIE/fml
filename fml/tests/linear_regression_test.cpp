@@ -119,6 +119,34 @@ TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
           == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 }
 
+TEST_CASE("TemplatizedEvaluate","[LinearRegressionFunction]")
+{
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+
+  LinearRegressionFunction<xt::xtensor<double,2>> lrf(data, labels);
+
+  xt::xtensor<double, 2> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == 184.5);
+
+  parameters = {{0, 0, 1./3}};
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == 0);
+
+  parameters = {{10., -204.5, 23.5}};
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == 770672.625);
+}
+
 TEST_CASE("SimpleGradient","[LinearRegressionFunction]")
 {
   xt::xarray<double> data = {{1, 2, 3},

@@ -28,6 +28,7 @@
 #include <xtensor/xfunction.hpp>
 #include <xtensor/xrandom.hpp>
 #include <xtensor/xnorm.hpp>
+#include <xtensor/xfixed.hpp>
 
 #include <xtensor-blas/xlinalg.hpp>
 
