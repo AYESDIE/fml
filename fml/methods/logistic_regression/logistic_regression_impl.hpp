@@ -32,7 +32,7 @@ LogisticRegression<DatasetType, LabelsType>::LogisticRegression(const DatasetTyp
 }
 
 template<typename DatasetType, typename LabelsType>
-xt::xtensor<double, 2>
+void
 LogisticRegression<DatasetType, LabelsType>::Compute(const DatasetType& dataset, LabelsType& labels)
 {
   xt::xtensor<double, 2> score = 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
@@ -45,7 +45,6 @@ LogisticRegression<DatasetType, LabelsType>::Compute(const DatasetType& dataset,
     else
       labels(i, 0) = 1;
   }
-  return score;
 }
 
 } // namespace regression

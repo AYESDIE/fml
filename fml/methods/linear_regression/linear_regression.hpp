@@ -24,6 +24,7 @@ public:
    *
    * @param dataset - Dataset of features.
    * @param labels - Set of labels corresponding to features.
+   * @param optimizer - Optimizer used for optimization.
    */
   template <typename OptimizerType>
   LinearRegression(const DatasetType& dataset,

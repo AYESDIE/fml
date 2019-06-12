@@ -12,7 +12,8 @@ namespace fml {
 namespace regression {
 
 /**
- * This is the implementation of the Linear Regression Function.
+ * This is the implementation of the L2 Regularized Linear
+ * Regression Function.
  */
 template <typename DatasetType = xt::xtensor<double, 2>,
           typename LabelsType = xt::xtensor<double, 2>>

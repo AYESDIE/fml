@@ -55,7 +55,7 @@ size_t LogisticRegressionFunction<DatasetType, LabelsType>::numFunctions()
 }
 
 template<typename DatasetType, typename LabelsType>
-xt::xarray<double> LogisticRegressionFunction<DatasetType, LabelsType>::GetInitialPoints()
+xt::xtensor<double, 2> LogisticRegressionFunction<DatasetType, LabelsType>::GetInitialPoints()
 {
   return xt::zeros<xt::xarray<double>>({int(dataset.shape(1)), 1});
 }

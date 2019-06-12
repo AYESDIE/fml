@@ -322,6 +322,6 @@ TEST_CASE("ComplexLogisticRegresion", "[LogisticRegression]")
     if ((*prediter)==(*labeliter))
       correct++;
   }
-  
+
   REQUIRE((double(correct)/total) >= 0.9);
 }
