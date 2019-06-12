@@ -21,7 +21,7 @@ TEST_CASE("LinearRegression","[LinearRegression]")
   auto labels = xt::view(dataset, xt::all(), xt::keep(3));
   auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  data = fml::math::Normalize(data, xt::xarray<size_t> {0, 1, 2});
+  data = fml::math::Normalize(data, 0, 1, 2);
   std::cout << data;
 
   fml::regression::LinearRegression lr(data, labels);

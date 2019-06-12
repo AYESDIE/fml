@@ -10,8 +10,10 @@
 namespace fml {
 namespace math {
 
-xt::xarray<double> Normalize(xt::xarray<double> xexpression,
-                             size_t i)
+
+template <typename E>
+void Normalizer(E& xexpression,
+               size_t i)
 {
   double min = xt::amin(xexpression, {0})(i);
   double max = xt::amax(xexpression, {0})(i);
@@ -22,22 +24,24 @@ xt::xarray<double> Normalize(xt::xarray<double> xexpression,
 
     xt::view(xexpression,xt::all(), xt::keep(i)) -= mean;
     xt::view(xexpression,xt::all(), xt::keep(i)) /= (max - min);
-    return xt::view(xexpression,xt::all(), xt::keep(i));
+    return;
   }
 
   std::cout << "Normalize: max - min = 0; Terminating." << std::endl;
-  return xt::view(xexpression,xt::all(), xt::keep(i));
 }
 
-xt::xarray<double> Normalize(xt::xarray<double> xexpression,
-                             xt::xarray<size_t> indices)
-{
-  for (auto iter = indices.begin(); iter != indices.end() ; iter++)
-  {
-    xt::view(xexpression,xt::all(), xt::keep(*iter)) = fml::math::Normalize(xexpression, *iter);
-  }
+template <typename E>
+void Normalize(E& xexpression)
+{ /* does nothing */ }
 
-  return xexpression;
+template <typename E,
+          typename... I>
+void Normalize(E& xexpression,
+               size_t index,
+               I... indices)
+{
+  fml::math::Normalizer(xexpression, index);
+  fml::math::Normalize(xexpression, indices...);
 }
 
 } // namespace math
