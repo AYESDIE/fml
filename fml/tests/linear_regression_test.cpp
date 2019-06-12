@@ -9,7 +9,7 @@
 using namespace fml;
 using namespace fml::regression;
 
-TEST_CASE("SimpleEvaluate", "[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionSimpleEvaluate", "[LinearRegressionFunction]")
 {
   xt::xarray<double> data = {{1, 2, 3},
                              {4, 5, 6},
@@ -37,7 +37,7 @@ TEST_CASE("SimpleEvaluate", "[LinearRegressionFunction]")
   REQUIRE(lrf.Evaluate(parameters) == 770672.625);
 }
 
-TEST_CASE("ComplexEvaluate", "[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionComplexEvaluate", "[LinearRegressionFunction]")
 {
   std::ifstream in_file;
   in_file.open("data/in.csv");
@@ -61,7 +61,7 @@ TEST_CASE("ComplexEvaluate", "[LinearRegressionFunction]")
   REQUIRE(lrf.Evaluate(parameters) == Approx(2.04328e+09).margin(1e-5));
 }
 
-TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionRegularizedEvaluate", "[LinearRegressionFunction]")
 {
   xt::xarray<double> data = {{1, 2, 3},
                              {4, 5, 6},
@@ -119,7 +119,7 @@ TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
           == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 }
 
-TEST_CASE("TemplatizedEvaluate","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionTemplatizedEvaluate","[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
                                  {4, 5, 6},
@@ -147,7 +147,7 @@ TEST_CASE("TemplatizedEvaluate","[LinearRegressionFunction]")
   REQUIRE(lrf.Evaluate(parameters) == 770672.625);
 }
 
-TEST_CASE("SimpleGradient","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionSimpleGradient","[LinearRegressionFunction]")
 {
   xt::xarray<double> data = {{1, 2, 3},
                              {4, 5, 6},
@@ -188,7 +188,7 @@ TEST_CASE("SimpleGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) == -10181.25);
 }
 
-TEST_CASE("ComplexGradient","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionComplexGradient","[LinearRegressionFunction]")
 {
   std::ifstream in_file;
   in_file.open("data/in.csv");
@@ -219,7 +219,7 @@ TEST_CASE("ComplexGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) == Approx(2.602012e-02).margin(1e-5));
 }
 
-TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionRegularizedGradient","[LinearRegressionFunction]")
 {
   xt::xarray<double> data = {{1, 2, 3},
                              {4, 5, 6},
@@ -303,7 +303,7 @@ TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
 }
 
-TEST_CASE("TemplatizedGradient","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionTemplatizedGradient","[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
                                  {4, 5, 6},

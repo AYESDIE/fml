@@ -7,35 +7,56 @@
 #include "catch.hpp"
 
 using namespace fml;
+using namespace fml::regression;
 
-TEST_CASE("Evaluate", "[LogisticRegressionFunction]")
+TEST_CASE("LogisticRegressionFunctionSimpleEvaluate", "[LogisticRegressionFunction]")
+{
+  xt::xarray<double> data = {{1, 2, 3},
+                             {4, 5, 6},
+                             {7, 8, 9},
+                             {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
+
+  LogisticRegressionFunction lrf(data, labels);
+
+  xt::xarray<double> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == Approx(5.2506).margin(1e-3));
+
+  parameters = {{9.382532, 0.88376, -7.615013}};
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == Approx(0.0095).margin(1e-3));
+
+  parameters = {{-5, 3, -7}};
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == Approx(43.7500).margin(1e-3));
+}
+
+
+TEST_CASE("LogisticRegressionFunctionComplexEvaluate","[LogisticRegressionFunction]")
 {
   std::ifstream in_file;
   in_file.open("data/logistictest.csv");
-  xt::xarray<double> dataset = xt::load_csv<double>(in_file);
+  auto dataset = xt::load_csv<double>(in_file);
+  in_file.close();
 
-  xt::xarray<size_t> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  fml::regression::LogisticRegression lr(data, labels);
-  xt::xarray<size_t> lab;
-  auto score = lr.Compute(data, lab);
+  LogisticRegressionFunction lrf(data, labels);
 
-  auto iter = score.begin();
-  auto labeliter = labels.begin();
+  xt::xarray<double> parameters = lrf.GetInitialPoints();
+  REQUIRE(lrf.Evaluate(parameters) == Approx(0.693147).margin(1e-5));
 
-  size_t correct = 0;
-  size_t total = 0;
-  for (; iter != score.end(); ++iter, ++labeliter)
-  {
-    total++;
-    if ((*iter <= 0.5) && (*labeliter == 0))
-      correct++;
-    else if ((*iter > 0.5) && (*labeliter == 1))
-      correct++;
-  }
-
-  std::cout << correct << " / " << total;
+  // Value of parameter for which the function is optimized.
+  parameters = {{-25.161272, 0.206233, 0.201470}};
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == Approx(0.203498).margin(1e-5));
 }
 
 TEST_CASE("Evaluate2", "[LogisticRegressionFunction]")
@@ -57,20 +78,16 @@ TEST_CASE("Evaluate2", "[LogisticRegressionFunction]")
 
 TEST_CASE("er","[asda]")
 {
-  std::ifstream in_file;
-  in_file.open("data/logistictest.csv");
-  xt::xarray<double> dataset = xt::load_csv<double>(in_file);
+  xt::xarray<double> data = {{1, 2, 3},
+                             {4, 5, 6},
+                             {7, 8, 9},
+                             {10, 11, 12}};
 
-  xt::xarray<size_t> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
 
-  fml::regression::LogisticRegressionFunction lrf(data, labels);
+  std::cout << "jfsf";
+  LogisticRegression lr(data, labels);
 
-  xt::xarray<double> params = xt::transpose(xt::xarray<double> {{ -25.161272, 0.206233, 0.201470}});
-  std::cout << params;
-  std::cout << lrf.Evaluate(params);
 
-  xt::xarray<double> grad;
-  lrf.Gradient(params, grad);
-  std::cout << grad;
 }
