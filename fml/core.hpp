@@ -29,6 +29,9 @@
 #include <xtensor/xrandom.hpp>
 #include <xtensor/xnorm.hpp>
 
-#include <xtensor-blas/xlinalg.hpp> // TODO
+#include <xtensor-blas/xlinalg.hpp>
+
+// Comment this to disable debug console.
+#define FML_DEBUG_CONSOLE
 
 #endif //FML_HPP

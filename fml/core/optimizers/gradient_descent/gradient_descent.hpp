@@ -50,9 +50,10 @@ public:
    * @param iterate - Parameters for which the function is optimized.
    * @return - Overall objective
    */
-  template <typename DifferentiableFunctionType>
+  template <typename DifferentiableFunctionType,
+            typename E>
   double Optimize(DifferentiableFunctionType& function,
-                  xt::xarray<double>& iterate);
+                  E& iterate);
 
 private:
   /// Step Size
