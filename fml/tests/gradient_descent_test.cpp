@@ -10,7 +10,7 @@ TEST_CASE("GradientDescent", "[GradientDescentTest]")
 {
   fml::test::TestFunction f;
 
-  fml::optimizer::GradientDescent gd(0.01, 5000000, 1e-9);
+  fml::optimizer::GradientDescent gd(0.01, 1000, 1e-9);
 
   auto coordinates = f.GetInitialPoint();
   double result = gd.Optimize(f, coordinates);

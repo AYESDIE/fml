@@ -5,7 +5,9 @@
 #ifndef FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_HPP
 #define FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_HPP
 
-#include "../../core.hpp"
+#include "fml/core.hpp"
+#include "linear_regression_function.hpp"
+#include "fml/core/optimizers/gradient_descent/gradient_descent.hpp"
 
 namespace fml {
 namespace regression {
@@ -13,6 +15,8 @@ namespace regression {
 /**
  * A class for Linear Regression.
  */
+template <typename DatasetType = xt::xarray<double>,
+          typename LabelsType = xt::xarray<double>>
 class LinearRegression {
 public:
   /**
@@ -21,16 +25,18 @@ public:
    * @param dataset - Dataset of features.
    * @param labels - Set of labels corresponding to features.
    */
-  LinearRegression(const xt::xarray<double>& dataset,
-                   const xt::xarray<double>& labels);
+  template <typename OptimizerType>
+  LinearRegression(DatasetType& dataset,
+                   LabelsType& labels,
+                   OptimizerType& optimizer = fml::optimizer::GradientDescent());
 
   /**
    * Computes labels for given `dataset`.
    * @param dataset - Dataset of features.
    * @param labels - Evaluated set of labels corresponding to features.
    */
-  void Compute(const xt::xarray<double>& dataset,
-               xt::xarray<double>& labels);
+  void Compute(DatasetType& dataset,
+               LabelsType& labels);
 
 private:
   /// Parameters
@@ -39,5 +45,7 @@ private:
 
 } // namespace regression
 } // namespace fml
+
+#include "linear_regression_impl.hpp"
 
 #endif //FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_HPP
