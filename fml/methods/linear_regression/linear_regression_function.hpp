@@ -21,9 +21,11 @@ public:
    *
    * @param dataset - dataset of features.
    * @param labels - set of labels corresponding to features.
+   * @param lambda - L2 regularization parameter.
    */
   LinearRegressionFunction(const xt::xarray<double>& dataset,
-                           const xt::xarray<double>& labels);
+                           const xt::xarray<double>& labels,
+                           const double lambda = 0.0);
 
   /**
    * This evaluates the loss for given set of `parameters` using
@@ -59,6 +61,9 @@ private:
 
   /// Labels
   xt::xarray<double> labels;
+
+  // L2 Regularization
+  double lambda;
 };
 
 } // namespace regression

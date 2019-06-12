@@ -23,15 +23,18 @@ TEST_CASE("SimpleEvaluate", "[LinearRegressionFunction]")
 
   xt::xarray<double> parameters;
 
-  // These values were calcuated by hand.
+  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
-  REQUIRE(lrf.Evaluate(xt::transpose(parameters)) == 184.5);
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == 184.5);
 
   parameters = {{0, 0, 1./3}};
-  REQUIRE(lrf.Evaluate(xt::transpose(parameters)) == 0);
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == 0);
 
   parameters = {{10., -204.5, 23.5}};
-  REQUIRE(lrf.Evaluate(xt::transpose(parameters)) == 770672.625);
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == 770672.625);
 }
 
 TEST_CASE("ComplexEvaluate", "[LinearRegressionFunction]")
@@ -54,9 +57,66 @@ TEST_CASE("ComplexEvaluate", "[LinearRegressionFunction]")
 
   // Value of parameter for which the function is optimized.
   parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
-  REQUIRE(lrf.Evaluate(xt::transpose(parameters))
-      == Approx(2.04328e+09).margin(1e-5));
+  parameters = xt::transpose(parameters);
+  REQUIRE(lrf.Evaluate(parameters) == Approx(2.04328e+09).margin(1e-5));
+}
 
+TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
+{
+  xt::xarray<double> data = {{1, 2, 3},
+                             {4, 5, 6},
+                             {7, 8, 9},
+                             {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+
+  double smallReg = 0.5;
+  double bigReg = 20.5;
+
+  LinearRegressionFunction lrf(data, labels);
+  LinearRegressionFunction smallRegLrf(data, labels, smallReg);
+  LinearRegressionFunction bigRegLrf(data, labels, bigReg);
+
+  xt::xarray<double> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  double reg = xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  double evalReg = (smallReg / (2 * smallRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(smallRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  evalReg = (bigReg / (2 * bigRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  // These values were calculated by hand.
+  parameters = {{0, 0, 1./3}};
+  parameters = xt::transpose(parameters);
+  reg = xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  evalReg = (smallReg / (2 * smallRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(smallRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  evalReg = (bigReg / (2 * bigRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  parameters = {{10., -204.5, 23.5}};
+  parameters = xt::transpose(parameters);
+  reg = xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  evalReg = (smallReg / (2 * smallRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+          == Approx(smallRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  evalReg = (bigReg / (2 * bigRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+          == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 }
 
 TEST_CASE("LinearRegression","[LinearRegression]")
