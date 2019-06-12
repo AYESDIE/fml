@@ -8,16 +8,25 @@ namespace fml {
 namespace regression {
 
 LogisticRegressionFunction::LogisticRegressionFunction(const xt::xarray<double>& dataset,
-                                                       const xt::xarray<size_t>& labels) :
+                                                       const xt::xarray<size_t>& labels,
+                                                       const double lambda) :
                                                        dataset(dataset),
-                                                       labels(labels)
+                                                       labels(labels),
+                                                       lambda(lambda)
 { /* does nothing here */ }
 
 double LogisticRegressionFunction::Evaluate(const xt::xarray<double>& parameters)
 {
+  // Evaluate the loss using sigmoid function
   auto sigmoid =  1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
   auto error = - (labels * xt::log(sigmoid)) - ((1 - labels) * xt::log(1 - sigmoid));
-  return xt::sum(error / numFunctions())();
+  double loss = xt::sum(error / numFunctions())();
+
+  // Evaluate the regularization
+  double reg = (lambda / (2 * numFunctions()))
+      * xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  return loss + reg;
 }
 
 void LogisticRegressionFunction::Gradient(const xt::xarray<double>& parameters,

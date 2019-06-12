@@ -93,7 +93,6 @@ TEST_CASE("LinearRegressionFunctionRegularizedEvaluate", "[LinearRegressionFunct
   REQUIRE(lrf.Evaluate(parameters) + evalReg
       == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 
-  // These values were calculated by hand.
   parameters = {{0, 0, 1./3}};
   parameters = xt::transpose(parameters);
   reg = xt::linalg::dot(xt::transpose(parameters), parameters)();
@@ -133,7 +132,6 @@ TEST_CASE("LinearRegressionFunctionTemplatizedEvaluate","[LinearRegressionFuncti
 
   xt::xtensor<double, 2> parameters;
 
-  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
   parameters = xt::transpose(parameters);
   REQUIRE(lrf.Evaluate(parameters) == 184.5);
@@ -161,7 +159,6 @@ TEST_CASE("LinearRegressionFunctionSimpleGradient","[LinearRegressionFunction]")
 
   xt::xarray<double> parameters;
 
-  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
   parameters = xt::transpose(parameters);
 
@@ -238,7 +235,6 @@ TEST_CASE("LinearRegressionFunctionRegularizedGradient","[LinearRegressionFuncti
 
   xt::xarray<double> parameters;
 
-  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
   parameters = xt::transpose(parameters);
   xt::xarray<double> reg = (smallReg / (2 * smallRegLrf.numFunctions()))
@@ -317,7 +313,6 @@ TEST_CASE("LinearRegressionFunctionTemplatizedGradient","[LinearRegressionFuncti
 
   xt::xarray<double> parameters;
 
-  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
   parameters = xt::transpose(parameters);
 

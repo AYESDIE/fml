@@ -14,7 +14,8 @@ class LogisticRegressionFunction
 {
 public:
   LogisticRegressionFunction(const xt::xarray<double>& dataset,
-                     const xt::xarray<size_t>& labels);
+                             const xt::xarray<size_t>& labels,
+                             const double lambda = 0);
 
   double Evaluate(const xt::xarray<double>& parameters);
 
@@ -26,9 +27,14 @@ public:
   xt::xarray<double> GetInitialPoints();
 
 private:
+  /// Dataset
   xt::xarray<double> dataset;
 
+  /// Labels
   xt::xarray<size_t> labels;
+
+  /// L2 Regularization constant
+  double lambda;
 };
 
 } // namespace regression

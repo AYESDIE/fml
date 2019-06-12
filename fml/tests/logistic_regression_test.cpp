@@ -37,7 +37,6 @@ TEST_CASE("LogisticRegressionFunctionSimpleEvaluate", "[LogisticRegressionFuncti
   REQUIRE(lrf.Evaluate(parameters) == Approx(43.7500).margin(1e-3));
 }
 
-
 TEST_CASE("LogisticRegressionFunctionComplexEvaluate","[LogisticRegressionFunction]")
 {
   std::ifstream in_file;
@@ -57,6 +56,63 @@ TEST_CASE("LogisticRegressionFunctionComplexEvaluate","[LogisticRegressionFuncti
   parameters = {{-25.161272, 0.206233, 0.201470}};
   parameters = xt::transpose(parameters);
   REQUIRE(lrf.Evaluate(parameters) == Approx(0.203498).margin(1e-5));
+}
+
+TEST_CASE("LogisticRegressionFunctionRegularizedEvaluate", "[LinearRegressionFunction]")
+{
+  xt::xarray<double> data = {{1, 2, 3},
+                             {4, 5, 6},
+                             {7, 8, 9},
+                             {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
+
+  double smallReg = 0.5;
+  double bigReg = 20.5;
+
+  LogisticRegressionFunction lrf(data, labels);
+  LogisticRegressionFunction smallRegLrf(data, labels, smallReg);
+  LogisticRegressionFunction bigRegLrf(data, labels, bigReg);
+
+  xt::xarray<double> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  double reg = xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  double evalReg = (smallReg / (2 * smallRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(smallRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  evalReg = (bigReg / (2 * bigRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  parameters = {{9.382532, 0.88376, -7.615013}};
+  parameters = xt::transpose(parameters);
+  reg = xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  evalReg = (smallReg / (2 * smallRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(smallRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  evalReg = (bigReg / (2 * bigRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  parameters = {{-5, 3, -7}};
+  parameters = xt::transpose(parameters);
+  reg = xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  evalReg = (smallReg / (2 * smallRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(smallRegLrf.Evaluate(parameters)).margin(1e-3));
+
+  evalReg = (bigReg / (2 * bigRegLrf.numFunctions())) * reg;
+  REQUIRE(lrf.Evaluate(parameters) + evalReg
+      == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 }
 
 TEST_CASE("Evaluate2", "[LogisticRegressionFunction]")
