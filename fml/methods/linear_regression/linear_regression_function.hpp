@@ -7,12 +7,15 @@
 
 #include "fml/core.hpp"
 
+
 namespace fml {
 namespace regression {
 
 /**
  * This is the implementation of the Linear Regression Function.
  */
+template <typename DatasetType = xt::xarray<double>,
+          typename LabelsType = xt::xarray<double>>
 class LinearRegressionFunction
 {
 public:
@@ -23,8 +26,8 @@ public:
    * @param labels - set of labels corresponding to features.
    * @param lambda - L2 regularization parameter.
    */
-  LinearRegressionFunction(const xt::xarray<double>& dataset,
-                           const xt::xarray<double>& labels,
+  LinearRegressionFunction(DatasetType& dataset,
+                           LabelsType& labels,
                            const double lambda = 0.0);
 
   /**
@@ -34,7 +37,8 @@ public:
    * @param parameters - Parameters for Linear Regression Function.
    * @return - Loss.
    */
-  double Evaluate(const xt::xarray<double>& parameters);
+  template <typename E>
+  double Evaluate(E& parameters);
 
   /**
    * This evaluates the gradient for the given set of `parameters`.
@@ -42,7 +46,8 @@ public:
    * @param parameters - Parameters for Linear Regression Function.
    * @param gradient - Evaluated gradient.
    */
-  void Gradient(const xt::xarray<double>& parameters,
+  template <typename E>
+  void Gradient(E& parameters,
                 xt::xarray<double>& gradient);
 
   /**
@@ -57,16 +62,18 @@ public:
 
 private:
   /// Dataset
-  xt::xarray<double> dataset;
+  DatasetType dataset;
 
   /// Labels
-  xt::xarray<double> labels;
+  LabelsType labels;
 
-  // L2 Regularization
+  /// L2 Regularization
   double lambda;
 };
 
 } // namespace regression
 } // namespace fml
+
+#include "linear_regression_function_impl.hpp"
 
 #endif //FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_FUNCTION_HPP

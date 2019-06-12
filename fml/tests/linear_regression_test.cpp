@@ -19,7 +19,7 @@ TEST_CASE("SimpleEvaluate", "[LinearRegressionFunction]")
   xt::xarray<double> labels =
       xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
 
-  LinearRegressionFunction lrf(data, labels);
+  LinearRegressionFunction<> lrf(data, labels);
 
   xt::xarray<double> parameters;
 
@@ -44,12 +44,12 @@ TEST_CASE("ComplexEvaluate", "[LinearRegressionFunction]")
   auto dataset = xt::load_csv<double>(in_file);
   in_file.close();
 
-  auto labels = xt::view(dataset, xt::all(), xt::keep(3));
-  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
   fml::math::Normalize(data, 1, 2);
 
-  LinearRegressionFunction lrf(data, labels);
+  LinearRegressionFunction<> lrf(data, labels);
 
   auto parameters = lrf.GetInitialPoints();
   REQUIRE(lrf.Evaluate(parameters)
@@ -74,9 +74,9 @@ TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
   double smallReg = 0.5;
   double bigReg = 20.5;
 
-  LinearRegressionFunction lrf(data, labels);
-  LinearRegressionFunction smallRegLrf(data, labels, smallReg);
-  LinearRegressionFunction bigRegLrf(data, labels, bigReg);
+  LinearRegressionFunction<> lrf(data, labels);
+  LinearRegressionFunction<> smallRegLrf(data, labels, smallReg);
+  LinearRegressionFunction<> bigRegLrf(data, labels, bigReg);
 
   xt::xarray<double> parameters;
 
@@ -129,7 +129,7 @@ TEST_CASE("SimpleGradient","[LinearRegressionFunction]")
   xt::xarray<double> labels =
       xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
 
-  LinearRegressionFunction lrf(data, labels);
+  LinearRegressionFunction<> lrf(data, labels);
 
   xt::xarray<double> parameters;
 
@@ -167,12 +167,12 @@ TEST_CASE("ComplexGradient","[LinearRegressionFunction]")
   auto dataset = xt::load_csv<double>(in_file);
   in_file.close();
 
-  auto labels = xt::view(dataset, xt::all(), xt::keep(3));
-  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
   fml::math::Normalize(data, 1, 2);
 
-  LinearRegressionFunction lrf(data, labels);
+  LinearRegressionFunction<> lrf(data, labels);
   auto parameters = lrf.GetInitialPoints();
 
   xt::xarray<double> gradient;
@@ -204,9 +204,9 @@ TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
   double smallReg = 0.5;
   double bigReg = 20.5;
 
-  LinearRegressionFunction lrf(data, labels);
-  LinearRegressionFunction smallRegLrf(data, labels, smallReg);
-  LinearRegressionFunction bigRegLrf(data, labels, bigReg);
+  LinearRegressionFunction<> lrf(data, labels);
+  LinearRegressionFunction<> smallRegLrf(data, labels, smallReg);
+  LinearRegressionFunction<> bigRegLrf(data, labels, bigReg);
 
   xt::xarray<double> parameters;
 
@@ -289,7 +289,6 @@ TEST_CASE("LinearRegression","[LinearRegression]")
   auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
   fml::math::Normalize(data, 0, 1, 2);
-  std::cout << data;
 
   fml::regression::LinearRegression lr(data, labels);
 

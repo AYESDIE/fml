@@ -2,8 +2,6 @@
 // Created by ayesdie on 7/6/19.
 //
 
-#include "linear_regression_function.hpp"
-
 namespace fml {
 namespace regression {
 

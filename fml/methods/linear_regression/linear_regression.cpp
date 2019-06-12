@@ -9,7 +9,8 @@ namespace regression {
 LinearRegression::LinearRegression(const xt::xarray<double> &dataset,
                                    const xt::xarray<double> &labels)
 {
-  LinearRegressionFunction lrf(dataset, labels);
+  LinearRegressionFunction<const xt::xarray<double>,
+      const xt::xarray<double>> lrf(dataset, labels);
 
   parameters = lrf.GetInitialPoints();
 
