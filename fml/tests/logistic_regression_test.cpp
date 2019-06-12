@@ -115,6 +115,47 @@ TEST_CASE("LogisticRegressionFunctionRegularizedEvaluate", "[LinearRegressionFun
       == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 }
 
+TEST_CASE("LogisticRegressionFunctionSimpleGradient","[LogisticRegressionFunction]")
+{
+  xt::xarray<double> data = {{1, 2, 3},
+                             {4, 5, 6},
+                             {7, 8, 9},
+                             {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
+
+  LogisticRegressionFunction lrf(data, labels);
+
+  xt::xarray<double> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+
+  xt::xarray<double> gradient;
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == Approx(1.249382).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(1.748763).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(2.248145).margin(1e-5));
+
+  parameters = {{9.382532, 0.88376, -7.615013}};
+  parameters = xt::transpose(parameters);
+
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == Approx(-0.002367).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(-0.00022).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(0.001927).margin(1e-5));
+
+  parameters = {{-5, 3, -7}};
+  parameters = xt::transpose(parameters);
+
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == Approx(-4.25).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(-4.75).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(-5.25).margin(1e-5));
+}
+
 TEST_CASE("Evaluate2", "[LogisticRegressionFunction]")
 {
   xt::xarray<double> data = {{1, 2, 3, 1},
