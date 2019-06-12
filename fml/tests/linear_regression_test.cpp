@@ -119,6 +119,78 @@ TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
           == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 }
 
+TEST_CASE("SimpleGradient","[LinearRegressionFunction]")
+{
+  xt::xarray<double> data = {{1, 2, 3},
+                             {4, 5, 6},
+                             {7, 8, 9},
+                             {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+
+  LinearRegressionFunction lrf(data, labels);
+
+  xt::xarray<double> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+
+  xt::xarray<double> gradient;
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == 123.5);
+  REQUIRE(gradient(1, 0) == 140.5);
+  REQUIRE(gradient(2, 0) == 157.5);
+
+  parameters = {{0, 0, 1./3}};
+  parameters = xt::transpose(parameters);
+
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == 0);
+  REQUIRE(gradient(1, 0) == 0);
+  REQUIRE(gradient(2, 0) == 0);
+
+  parameters = {{10., -204.5, 23.5}};
+  parameters = xt::transpose(parameters);
+
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == -7980.25);
+  REQUIRE(gradient(1, 0) == -9080.75);
+  REQUIRE(gradient(2, 0) == -10181.25);
+}
+
+TEST_CASE("ComplexGradient","[LinearRegressionFunction]")
+{
+  std::ifstream in_file;
+  in_file.open("data/in.csv");
+  auto dataset = xt::load_csv<double>(in_file);
+  in_file.close();
+
+  auto labels = xt::view(dataset, xt::all(), xt::keep(3));
+  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+
+  fml::math::Normalize(data, 1, 2);
+
+  LinearRegressionFunction lrf(data, labels);
+  auto parameters = lrf.GetInitialPoints();
+
+  xt::xarray<double> gradient;
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == Approx(-340411.659574).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(-22932.097461).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(-10296.727488).margin(1e-5));
+
+  // Value of parameter for which the function is optimized.
+  parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
+  parameters = xt::transpose(parameters);
+
+  lrf.Gradient(parameters, gradient);
+  REQUIRE(gradient(0, 0) == Approx(-4.681071e-07).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(-2.024553e-02).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(2.602012e-02).margin(1e-5));
+}
+
 TEST_CASE("LinearRegression","[LinearRegression]")
 {
   std::ifstream in_file;
