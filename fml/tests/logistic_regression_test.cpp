@@ -11,15 +11,15 @@ using namespace fml::regression;
 
 TEST_CASE("LogisticRegressionFunctionSimpleEvaluate", "[LogisticRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
-  xt::xarray<double> labels =
+  xt::xtensor<size_t, 2> labels =
       xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
 
-  LogisticRegressionFunction lrf(data, labels);
+  LogisticRegressionFunction<> lrf(data, labels);
 
   xt::xarray<double> parameters;
 
@@ -44,10 +44,10 @@ TEST_CASE("LogisticRegressionFunctionComplexEvaluate","[LogisticRegressionFuncti
   auto dataset = xt::load_csv<double>(in_file);
   in_file.close();
 
-  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xtensor<size_t, 2> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  LogisticRegressionFunction lrf(data, labels);
+  LogisticRegressionFunction<> lrf(data, labels);
 
   xt::xarray<double> parameters = lrf.GetInitialPoints();
   REQUIRE(lrf.Evaluate(parameters) == Approx(0.693147).margin(1e-5));
@@ -60,20 +60,20 @@ TEST_CASE("LogisticRegressionFunctionComplexEvaluate","[LogisticRegressionFuncti
 
 TEST_CASE("LogisticRegressionFunctionRegularizedEvaluate", "[LogisticRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
-  xt::xarray<double> labels =
+  xt::xtensor<size_t, 2> labels =
       xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
 
   double smallReg = 0.5;
   double bigReg = 20.5;
 
-  LogisticRegressionFunction lrf(data, labels);
-  LogisticRegressionFunction smallRegLrf(data, labels, smallReg);
-  LogisticRegressionFunction bigRegLrf(data, labels, bigReg);
+  LogisticRegressionFunction<> lrf(data, labels);
+  LogisticRegressionFunction<> smallRegLrf(data, labels, smallReg);
+  LogisticRegressionFunction<> bigRegLrf(data, labels, bigReg);
 
   xt::xarray<double> parameters;
 
@@ -117,15 +117,15 @@ TEST_CASE("LogisticRegressionFunctionRegularizedEvaluate", "[LogisticRegressionF
 
 TEST_CASE("LogisticRegressionFunctionSimpleGradient","[LogisticRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
+  xt::xtensor<double, 2> data = {{1, 2, 3},
                              {4, 5, 6},
                              {7, 8, 9},
                              {10, 11, 12}};
 
-  xt::xarray<double> labels =
+  xt::xtensor<size_t, 2> labels =
       xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
 
-  LogisticRegressionFunction lrf(data, labels);
+  LogisticRegressionFunction<> lrf(data, labels);
 
   xt::xarray<double> parameters;
 
@@ -163,10 +163,10 @@ TEST_CASE("LogisticRegressionFunctionComplexGradient","[LogisticRegressionFuncti
   auto dataset = xt::load_csv<double>(in_file);
   in_file.close();
 
-  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xtensor<size_t, 2> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  LogisticRegressionFunction lrf(data, labels);
+  LogisticRegressionFunction<> lrf(data, labels);
   auto parameters = lrf.GetInitialPoints();
 
   xt::xarray<double> gradient;
@@ -187,20 +187,20 @@ TEST_CASE("LogisticRegressionFunctionComplexGradient","[LogisticRegressionFuncti
 
 TEST_CASE("LogisticRegressionFunctionRegularizedGradient","[LogisticRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
-  xt::xarray<double> labels =
+  xt::xtensor<size_t, 2> labels =
       xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
 
   double smallReg = 0.5;
   double bigReg = 20.5;
 
-  LogisticRegressionFunction lrf(data, labels);
-  LogisticRegressionFunction smallRegLrf(data, labels, smallReg);
-  LogisticRegressionFunction bigRegLrf(data, labels, bigReg);
+  LogisticRegressionFunction<> lrf(data, labels);
+  LogisticRegressionFunction<> smallRegLrf(data, labels, smallReg);
+  LogisticRegressionFunction<> bigRegLrf(data, labels, bigReg);
 
   xt::xarray<double> parameters;
 
@@ -270,33 +270,10 @@ TEST_CASE("LogisticRegressionFunctionRegularizedGradient","[LogisticRegressionFu
 
 TEST_CASE("Evaluate2", "[LogisticRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3, 1},
-                             {1, 4, 6, 0},
-                             {1, 5, 7, 0},
-                             {1, 4, 2, 1}};
 
-  xt::xarray<size_t> labels = xt::view(data, xt::all(), xt::keep(3));
-  data = xt::view(data, xt::all(), xt::drop(3));
-
-  fml::regression::LogisticRegressionFunction lrf(data, labels);
-  auto params = lrf.GetInitialPoints();
-  // REQUIRE(lrf.Evaluate(params) == Approx(6.00085152).margin(1e-5));
-
-  params = {{1, 2, 3}};
 }
 
 TEST_CASE("er","[asda]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
-
-  xt::xarray<double> labels =
-      xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
-
-  std::cout << "jfsf";
-  LogisticRegression lr(data, labels);
-
 
 }

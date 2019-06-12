@@ -1,6 +1,6 @@
 set(SOURCES
     logistic_regression_function.hpp
-    logistic_regression_function.cpp
+    logistic_regression_function_impl.hpp
     logistic_regression.cpp
     logistic_regression.hpp)
 

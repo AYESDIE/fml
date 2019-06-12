@@ -2,8 +2,6 @@
 // Created by ayesdie on 10/6/19.
 //
 
-#include "logistic_regression_function.hpp"
-
 namespace fml {
 namespace regression {
 

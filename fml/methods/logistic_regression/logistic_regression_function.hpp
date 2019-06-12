@@ -10,16 +10,20 @@
 namespace fml {
 namespace regression {
 
+template <typename DatasetType = xt::xtensor<double, 2>,
+          typename LabelsType = xt::xtensor<size_t, 2>>
 class LogisticRegressionFunction
 {
 public:
-  LogisticRegressionFunction(const xt::xarray<double>& dataset,
-                             const xt::xarray<size_t>& labels,
+  LogisticRegressionFunction(DatasetType& dataset,
+                             LabelsType& labels,
                              const double lambda = 0);
 
-  double Evaluate(const xt::xarray<double>& parameters);
+  template <typename E>
+  double Evaluate(E& parameters);
 
-  void Gradient(const xt::xarray<double>& parameters,
+  template <typename E>
+  void Gradient(E& parameters,
                 xt::xarray<double>& gradient);
 
   size_t numFunctions();
@@ -28,10 +32,10 @@ public:
 
 private:
   /// Dataset
-  xt::xarray<double> dataset;
+  DatasetType dataset;
 
   /// Labels
-  xt::xarray<size_t> labels;
+  LabelsType labels;
 
   /// L2 Regularization constant
   double lambda;
@@ -39,5 +43,7 @@ private:
 
 } // namespace regression
 } // namespace fml
+
+#include "logistic_regression_function_impl.hpp"
 
 #endif //FML_METHODS_LOGISTIC_REGRESSION_LOGISTIC_REGRESSION_FUNCTION_HPP

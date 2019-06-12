@@ -53,12 +53,12 @@ TEST_CASE("LinearRegressionFunctionComplexEvaluate", "[LinearRegressionFunction]
 
   auto parameters = lrf.GetInitialPoints();
   REQUIRE(lrf.Evaluate(parameters)
-      == Approx(65591174465.408866).margin(1e-5));
+      == Approx(65590064403.02206).margin(1e-5));
 
   // Value of parameter for which the function is optimized.
   parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
   parameters = xt::transpose(parameters);
-  REQUIRE(lrf.Evaluate(parameters) == Approx(2.04328e+09).margin(1e-5));
+  REQUIRE(lrf.Evaluate(parameters) == Approx(8376410740.07934).margin(1e-5));
 }
 
 TEST_CASE("LinearRegressionFunctionRegularizedEvaluate", "[LinearRegressionFunction]")
@@ -204,16 +204,16 @@ TEST_CASE("LinearRegressionFunctionComplexGradient","[LinearRegressionFunction]"
   lrf.Gradient(parameters, gradient);
   REQUIRE(gradient(0, 0) == Approx(-340411.659574).margin(1e-5));
   REQUIRE(gradient(1, 0) == Approx(-22932.097461).margin(1e-5));
-  REQUIRE(gradient(2, 0) == Approx(-10296.727488).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(-1120353.8234).margin(1e-5));
 
   // Value of parameter for which the function is optimized.
   parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
   parameters = xt::transpose(parameters);
 
   lrf.Gradient(parameters, gradient);
-  REQUIRE(gradient(0, 0) == Approx(-4.681071e-07).margin(1e-5));
-  REQUIRE(gradient(1, 0) == Approx(-2.024553e-02).margin(1e-5));
-  REQUIRE(gradient(2, 0) == Approx(2.602012e-02).margin(1e-5));
+  REQUIRE(gradient(0, 0) == Approx(-110800.8435387).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(-2396.0350924).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(-366118.919).margin(1e-5));
 }
 
 TEST_CASE("LinearRegressionFunctionRegularizedGradient","[LinearRegressionFunction]")

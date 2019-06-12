@@ -11,7 +11,8 @@ namespace regression {
 LogisticRegression::LogisticRegression(const xt::xarray<double> &dataset,
                                        const xt::xarray<size_t> &labels)
 {
-  LogisticRegressionFunction lrf(dataset, labels);
+  LogisticRegressionFunction<const xt::xarray<double>,
+      const xt::xarray<size_t>> lrf(dataset, labels);
 
   parameters = lrf.GetInitialPoints();
   std::cout << parameters;
