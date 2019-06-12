@@ -5,7 +5,7 @@
 #ifndef FML_MATH_NORMALIZE_NORMALIZE_HPP
 #define FML_MATH_NORMALIZE_NORMALIZE_HPP
 
-#include "../../core.hpp"
+#include "fml/core.hpp"
 
 namespace fml {
 namespace math {
@@ -27,7 +27,9 @@ void Normalizer(E& xexpression,
     return;
   }
 
+  #ifdef FML_DEBUG_CONSOLE
   std::cout << "Normalize: max - min = 0; Terminating." << std::endl;
+  #endif
 }
 
 template <typename E>
