@@ -354,12 +354,13 @@ TEST_CASE("LinearRegression","[LinearRegression]")
   in_file.open("data/res.csv");
   auto result = xt::load_csv<double>(in_file);
 
-  auto labels = xt::view(dataset, xt::all(), xt::keep(3));
-  auto data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
   fml::math::Normalize(data, 0, 1, 2);
 
-  fml::regression::LinearRegression lr(data, labels);
+  fml::optimizer::GradientDescent gd;
+  fml::regression::LinearRegression<> lr(data, labels, gd);
 
   xt::xarray<double> predictions;
   lr.Compute(data, predictions);
