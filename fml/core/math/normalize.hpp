@@ -48,4 +48,5 @@ void Normalize(E& xexpression,
 
 } // namespace math
 } // namespace fml
+
 #endif //FML_MATH_NORMALIZE_NORMALIZE_HPP

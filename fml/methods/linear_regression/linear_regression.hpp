@@ -5,7 +5,9 @@
 #ifndef FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_HPP
 #define FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_HPP
 
-#include "../../core.hpp"
+#include "fml/core.hpp"
+#include "linear_regression_function.hpp"
+#include "fml/core/optimizers/gradient_descent/gradient_descent.hpp"
 
 namespace fml {
 namespace regression {

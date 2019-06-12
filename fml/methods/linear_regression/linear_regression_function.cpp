@@ -19,9 +19,8 @@ double LinearRegressionFunction::Evaluate(const xt::xarray<double>& parameters)
   // actual values.
   auto error = xt::linalg::dot(dataset, parameters) - labels;
 
-  // Calculates the mean squared error.
-  return xt::linalg::dot(xt::transpose(error), error)(0, 0)
-      / (2 * numFunctions());
+  return xt::linalg::dot(xt::transpose(error), error
+      / (2 * numFunctions()))();
 }
 
 void LinearRegressionFunction::Gradient(const xt::xarray<double>& parameters,
@@ -30,7 +29,8 @@ void LinearRegressionFunction::Gradient(const xt::xarray<double>& parameters,
   // Evaluates the error between the evaluated values and
   // actual values.
   auto error = xt::linalg::dot(dataset, parameters) - labels;
-  gradient = xt::linalg::dot(xt::transpose(dataset), error) / numFunctions();
+  gradient = xt::linalg::dot(xt::transpose(dataset), error
+      / numFunctions());
 }
 
 size_t LinearRegressionFunction::numFunctions()
