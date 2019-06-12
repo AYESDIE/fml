@@ -32,6 +32,8 @@
 
 #include <xtensor-blas/xlinalg.hpp>
 
+#include "fml/core/math/normalize.hpp"
+
 // Comment this to disable debug console.
 #define FML_DEBUG_CONSOLE
 

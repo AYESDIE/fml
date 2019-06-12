@@ -3,25 +3,25 @@
 //
 
 #include <fml/methods/linear_regression/linear_regression.hpp>
-#include <fml/core/math/normalize.hpp>
+#include <fml/core.hpp>
 #include "catch.hpp"
 
 using namespace fml;
 using namespace fml::regression;
 
-TEST_CASE("SimpleEvaluate", "[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionSimpleEvaluate", "[LinearRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
+  xt::xtensor<double, 2> data = {{1, 2, 3},
                              {4, 5, 6},
                              {7, 8, 9},
                              {10, 11, 12}};
 
-  xt::xarray<double> labels =
-      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
 
   LinearRegressionFunction<> lrf(data, labels);
 
-  xt::xarray<double> parameters;
+  xt::xtensor<double, 2> parameters;
 
   // These values were calculated by hand.
   parameters = {{1, 1, 1}};
@@ -37,39 +37,39 @@ TEST_CASE("SimpleEvaluate", "[LinearRegressionFunction]")
   REQUIRE(lrf.Evaluate(parameters) == 770672.625);
 }
 
-TEST_CASE("ComplexEvaluate", "[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionComplexEvaluate", "[LinearRegressionFunction]")
 {
   std::ifstream in_file;
   in_file.open("data/in.csv");
   auto dataset = xt::load_csv<double>(in_file);
   in_file.close();
 
-  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xtensor<double, 2> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  fml::math::Normalize(data, 1, 2);
+  math::Normalize(data, 1, 2);
 
   LinearRegressionFunction<> lrf(data, labels);
 
   auto parameters = lrf.GetInitialPoints();
   REQUIRE(lrf.Evaluate(parameters)
-      == Approx(65591174465.408866).margin(1e-5));
+      == Approx(65590064403.02206).margin(1e-5));
 
   // Value of parameter for which the function is optimized.
   parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
   parameters = xt::transpose(parameters);
-  REQUIRE(lrf.Evaluate(parameters) == Approx(2.04328e+09).margin(1e-5));
+  REQUIRE(lrf.Evaluate(parameters) == Approx(8376410740.07934).margin(1e-5));
 }
 
-TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionRegularizedEvaluate", "[LinearRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
+  xt::xtensor<double, 2> data = {{1, 2, 3},
                              {4, 5, 6},
                              {7, 8, 9},
                              {10, 11, 12}};
 
-  xt::xarray<double> labels =
-      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
 
   double smallReg = 0.5;
   double bigReg = 20.5;
@@ -78,7 +78,7 @@ TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
   LinearRegressionFunction<> smallRegLrf(data, labels, smallReg);
   LinearRegressionFunction<> bigRegLrf(data, labels, bigReg);
 
-  xt::xarray<double> parameters;
+  xt::xtensor<double, 2> parameters;
 
   // These values were calculated by hand.
   parameters = {{1, 1, 1}};
@@ -93,7 +93,6 @@ TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
   REQUIRE(lrf.Evaluate(parameters) + evalReg
       == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 
-  // These values were calculated by hand.
   parameters = {{0, 0, 1./3}};
   parameters = xt::transpose(parameters);
   reg = xt::linalg::dot(xt::transpose(parameters), parameters)();
@@ -119,21 +118,20 @@ TEST_CASE("RegularizedEvaluate", "[LinearRegressionFunction]")
           == Approx(bigRegLrf.Evaluate(parameters)).margin(1e-3));
 }
 
-TEST_CASE("TemplatizedEvaluate","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionTemplatizedEvaluate","[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
                                  {4, 5, 6},
                                  {7, 8, 9},
                                  {10, 11, 12}};
 
-  xt::xarray<double> labels =
-      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
 
   LinearRegressionFunction<xt::xtensor<double,2>> lrf(data, labels);
 
   xt::xtensor<double, 2> parameters;
 
-  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
   parameters = xt::transpose(parameters);
   REQUIRE(lrf.Evaluate(parameters) == 184.5);
@@ -147,25 +145,24 @@ TEST_CASE("TemplatizedEvaluate","[LinearRegressionFunction]")
   REQUIRE(lrf.Evaluate(parameters) == 770672.625);
 }
 
-TEST_CASE("SimpleGradient","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionSimpleGradient","[LinearRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
+  xt::xtensor<double, 2> data = {{1, 2, 3},
                              {4, 5, 6},
                              {7, 8, 9},
                              {10, 11, 12}};
 
-  xt::xarray<double> labels =
-      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
 
   LinearRegressionFunction<> lrf(data, labels);
 
-  xt::xarray<double> parameters;
+  xt::xtensor<double, 2> parameters;
 
-  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
   parameters = xt::transpose(parameters);
 
-  xt::xarray<double> gradient;
+  xt::xtensor<double, 2> gradient;
   lrf.Gradient(parameters, gradient);
   REQUIRE(gradient(0, 0) == 123.5);
   REQUIRE(gradient(1, 0) == 140.5);
@@ -188,46 +185,46 @@ TEST_CASE("SimpleGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) == -10181.25);
 }
 
-TEST_CASE("ComplexGradient","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionComplexGradient","[LinearRegressionFunction]")
 {
   std::ifstream in_file;
   in_file.open("data/in.csv");
   auto dataset = xt::load_csv<double>(in_file);
   in_file.close();
 
-  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xtensor<double, 2> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  fml::math::Normalize(data, 1, 2);
+  math::Normalize(data, 1, 2);
 
   LinearRegressionFunction<> lrf(data, labels);
   auto parameters = lrf.GetInitialPoints();
 
-  xt::xarray<double> gradient;
+  xt::xtensor<double, 2> gradient;
   lrf.Gradient(parameters, gradient);
   REQUIRE(gradient(0, 0) == Approx(-340411.659574).margin(1e-5));
   REQUIRE(gradient(1, 0) == Approx(-22932.097461).margin(1e-5));
-  REQUIRE(gradient(2, 0) == Approx(-10296.727488).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(-1120353.8234).margin(1e-5));
 
   // Value of parameter for which the function is optimized.
   parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
   parameters = xt::transpose(parameters);
 
   lrf.Gradient(parameters, gradient);
-  REQUIRE(gradient(0, 0) == Approx(-4.681071e-07).margin(1e-5));
-  REQUIRE(gradient(1, 0) == Approx(-2.024553e-02).margin(1e-5));
-  REQUIRE(gradient(2, 0) == Approx(2.602012e-02).margin(1e-5));
+  REQUIRE(gradient(0, 0) == Approx(-110800.8435387).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(-2396.0350924).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(-366118.919).margin(1e-5));
 }
 
-TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionRegularizedGradient","[LinearRegressionFunction]")
 {
-  xt::xarray<double> data = {{1, 2, 3},
+  xt::xtensor<double, 2> data = {{1, 2, 3},
                              {4, 5, 6},
                              {7, 8, 9},
                              {10, 11, 12}};
 
-  xt::xarray<double> labels =
-      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
 
   double smallReg = 0.5;
   double bigReg = 20.5;
@@ -236,18 +233,17 @@ TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
   LinearRegressionFunction<> smallRegLrf(data, labels, smallReg);
   LinearRegressionFunction<> bigRegLrf(data, labels, bigReg);
 
-  xt::xarray<double> parameters;
+  xt::xtensor<double, 2> parameters;
 
-  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
   parameters = xt::transpose(parameters);
-  xt::xarray<double> reg = (smallReg / (2 * smallRegLrf.numFunctions()))
+  xt::xtensor<double, 2> reg = (smallReg / (2 * smallRegLrf.numFunctions()))
       * parameters;
 
-  xt::xarray<double> gradient;
+  xt::xtensor<double, 2> gradient;
   lrf.Gradient(parameters, gradient);
 
-  xt::xarray<double> smallGradient;
+  xt::xtensor<double, 2> smallGradient;
   smallRegLrf.Gradient(parameters, smallGradient);
   REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(smallGradient(0, 0)).margin(1e-5));
   REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(smallGradient(1, 0)).margin(1e-5));
@@ -256,7 +252,7 @@ TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
   reg = (bigReg / (2 * bigRegLrf.numFunctions()))
       * parameters;
 
-  xt::xarray<double> bigGradient;
+  xt::xtensor<double, 2> bigGradient;
   bigRegLrf.Gradient(parameters, bigGradient);
   REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(bigGradient(0, 0)).margin(1e-5));
   REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(bigGradient(1, 0)).margin(1e-5));
@@ -303,25 +299,24 @@ TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
 }
 
-TEST_CASE("TemplatizedGradient","[LinearRegressionFunction]")
+TEST_CASE("LinearRegressionFunctionTemplatizedGradient","[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
                                  {4, 5, 6},
                                  {7, 8, 9},
                                  {10, 11, 12}};
 
-  xt::xarray<double> labels =
-      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
 
   LinearRegressionFunction<xt::xtensor<double, 2>> lrf(data, labels);
 
-  xt::xarray<double> parameters;
+  xt::xtensor<double, 2> parameters;
 
-  // These values were calculated by hand.
   parameters = {{1, 1, 1}};
   parameters = xt::transpose(parameters);
 
-  xt::xarray<double> gradient;
+  xt::xtensor<double, 2> gradient;
   lrf.Gradient(parameters, gradient);
   REQUIRE(gradient(0, 0) == 123.5);
   REQUIRE(gradient(1, 0) == 140.5);
@@ -344,7 +339,33 @@ TEST_CASE("TemplatizedGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) == -10181.25);
 }
 
-TEST_CASE("LinearRegression","[LinearRegression]")
+TEST_CASE("SimpleLinearRegression","[LinearRegression]")
+{
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
+
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
+
+  optimizer::GradientDescent gd(0.01, 1000000, 1e-15);
+  LinearRegression<xt::xtensor<double, 2>,
+      xt::xtensor<double, 2>> lr(data, labels, gd);
+
+  xt::xtensor<double, 2> pred;
+  lr.Compute(data, pred);
+
+  auto labeliter = labels.begin();
+  auto prediter = pred.begin();
+
+  for (; prediter != pred.end() ; ++labeliter, ++prediter)
+  {
+    REQUIRE((*labeliter) == Approx(*prediter).margin(1e-5));
+  }
+}
+
+TEST_CASE("ComplexLinearRegression","[LinearRegression]")
 {
   std::ifstream in_file;
   in_file.open("data/in.csv");
@@ -354,15 +375,15 @@ TEST_CASE("LinearRegression","[LinearRegression]")
   in_file.open("data/res.csv");
   auto result = xt::load_csv<double>(in_file);
 
-  xt::xarray<double> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  xt::xarray<double> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+  xt::xtensor<double, 2> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
 
-  fml::math::Normalize(data, 0, 1, 2);
+  math::Normalize(data, 0, 1, 2);
 
-  fml::optimizer::GradientDescent gd;
-  fml::regression::LinearRegression<> lr(data, labels, gd);
+  optimizer::GradientDescent gd;
+  LinearRegression<xt::xtensor<double, 2>, xt::xtensor<double, 2>> lr(data, labels, gd);
 
-  xt::xarray<double> predictions;
+  xt::xtensor<double, 2> predictions;
   lr.Compute(data, predictions);
 
   auto resultiter = result.begin();

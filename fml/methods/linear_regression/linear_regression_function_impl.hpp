@@ -11,8 +11,8 @@ namespace fml {
 namespace regression {
 
 template<typename DatasetType, typename LabelsType>
-LinearRegressionFunction<DatasetType, LabelsType>::LinearRegressionFunction(DatasetType &dataset,
-                                                                            LabelsType &labels,
+LinearRegressionFunction<DatasetType, LabelsType>::LinearRegressionFunction(DatasetType& dataset,
+                                                                            LabelsType& labels,
                                                                             const double lambda) :
                                                                             dataset(dataset),
                                                                             labels(labels),
@@ -21,7 +21,7 @@ LinearRegressionFunction<DatasetType, LabelsType>::LinearRegressionFunction(Data
 
 template<typename DatasetType, typename LabelsType>
 template<typename E>
-double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(E &parameters)
+double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(E& parameters)
 {
   // Evaluates the error between the evaluated values and
   // actual values.
@@ -39,9 +39,9 @@ double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(E &parameters
 }
 
 template<typename DatasetType, typename LabelsType>
-template<typename E>
-void LinearRegressionFunction<DatasetType, LabelsType>::Gradient(E &parameters,
-                                                                 xt::xarray<double> &gradient)
+template<typename E, typename G>
+void LinearRegressionFunction<DatasetType, LabelsType>::Gradient(E& parameters,
+                                                                 G& gradient)
 {
   // Evaluates the error between the evaluated values and
   // actual values.
@@ -59,9 +59,9 @@ size_t LinearRegressionFunction<DatasetType, LabelsType>::numFunctions()
 }
 
 template<typename DatasetType, typename LabelsType>
-xt::xarray<double> LinearRegressionFunction<DatasetType, LabelsType>::GetInitialPoints()
+xt::xtensor<double, 2> LinearRegressionFunction<DatasetType, LabelsType>::GetInitialPoints()
 {
-  return xt::ones<xt::xarray<double>>({int(dataset.shape(1)), 1});;
+  return xt::ones<xt::xarray<double>>({int(dataset.shape(1)), 1});
 }
 
 }
