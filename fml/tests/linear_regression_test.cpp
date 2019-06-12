@@ -344,7 +344,33 @@ TEST_CASE("TemplatizedGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) == -10181.25);
 }
 
-TEST_CASE("LinearRegression","[LinearRegression]")
+TEST_CASE("SimpleLinearRegression","[LinearRegression]")
+{
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
+
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+
+  fml::optimizer::GradientDescent gd(0.01, 1000000, 1e-15);
+  fml::regression::LinearRegression<xt::xtensor<double, 2>,
+      xt::xtensor<double, 2>> lr(data, labels, gd);
+
+  xt::xtensor<double, 2> pred;
+  lr.Compute(data, pred);
+
+  auto labeliter = labels.begin();
+  auto prediter = pred.begin();
+
+  for (; prediter != pred.end() ; ++labeliter, ++prediter)
+  {
+    REQUIRE((*labeliter) == Approx(*prediter).margin(1e-5));
+  }
+}
+
+TEST_CASE("ComplexLinearRegression","[LinearRegression]")
 {
   std::ifstream in_file;
   in_file.open("data/in.csv");
