@@ -191,6 +191,90 @@ TEST_CASE("ComplexGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(2, 0) == Approx(2.602012e-02).margin(1e-5));
 }
 
+TEST_CASE("RegularizedGradient","[LinearRegressionFunction]")
+{
+  xt::xarray<double> data = {{1, 2, 3},
+                             {4, 5, 6},
+                             {7, 8, 9},
+                             {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+
+  double smallReg = 0.5;
+  double bigReg = 20.5;
+
+  LinearRegressionFunction lrf(data, labels);
+  LinearRegressionFunction smallRegLrf(data, labels, smallReg);
+  LinearRegressionFunction bigRegLrf(data, labels, bigReg);
+
+  xt::xarray<double> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  xt::xarray<double> reg = (smallReg / (2 * smallRegLrf.numFunctions()))
+      * parameters;
+
+  xt::xarray<double> gradient;
+  lrf.Gradient(parameters, gradient);
+
+  xt::xarray<double> smallGradient;
+  smallRegLrf.Gradient(parameters, smallGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(smallGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(smallGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(smallGradient(2, 0)).margin(1e-5));
+
+  reg = (bigReg / (2 * bigRegLrf.numFunctions()))
+      * parameters;
+
+  xt::xarray<double> bigGradient;
+  bigRegLrf.Gradient(parameters, bigGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(bigGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(bigGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
+
+  parameters = {{0, 0, 1./3}};
+  parameters = xt::transpose(parameters);
+  reg = (smallReg / (2 * smallRegLrf.numFunctions()))
+      * parameters;
+
+  lrf.Gradient(parameters, gradient);
+
+  smallRegLrf.Gradient(parameters, smallGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(smallGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(smallGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(smallGradient(2, 0)).margin(1e-5));
+
+  reg = (bigReg / (2 * bigRegLrf.numFunctions()))
+      * parameters;
+
+  bigRegLrf.Gradient(parameters, bigGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(bigGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(bigGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
+
+  parameters = {{10., -204.5, 23.5}};
+  parameters = xt::transpose(parameters);
+  reg = (smallReg / (2 * smallRegLrf.numFunctions()))
+        * parameters;
+
+  lrf.Gradient(parameters, gradient);
+
+  smallRegLrf.Gradient(parameters, smallGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(smallGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(smallGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(smallGradient(2, 0)).margin(1e-5));
+
+  reg = (bigReg / (2 * bigRegLrf.numFunctions()))
+        * parameters;
+
+  bigRegLrf.Gradient(parameters, bigGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(bigGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(bigGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
+}
+
 TEST_CASE("LinearRegression","[LinearRegression]")
 {
   std::ifstream in_file;

@@ -38,8 +38,10 @@ void LinearRegressionFunction::Gradient(const xt::xarray<double>& parameters,
   // Evaluates the error between the evaluated values and
   // actual values.
   auto error = xt::linalg::dot(dataset, parameters) - labels;
+
+  // Evaluate the regularized gradient.
   gradient = xt::linalg::dot(xt::transpose(dataset), error
-      / numFunctions());
+      / numFunctions()) + ((lambda / (2 * numFunctions())) * parameters);
 }
 
 size_t LinearRegressionFunction::numFunctions()
