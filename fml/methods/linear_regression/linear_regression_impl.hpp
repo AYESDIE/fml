@@ -12,11 +12,11 @@ namespace regression {
 
 template<typename DatasetType, typename LabelsType>
 template<typename OptimizerType>
-LinearRegression<DatasetType, LabelsType>::LinearRegression(DatasetType &dataset,
-                                                            LabelsType &labels,
+LinearRegression<DatasetType, LabelsType>::LinearRegression(const DatasetType &dataset,
+                                                            const LabelsType &labels,
                                                             OptimizerType &optimizer)
 {
-  LinearRegressionFunction<DatasetType, LabelsType> lrf(dataset, labels);
+  LinearRegressionFunction<const DatasetType, const LabelsType> lrf(dataset, labels);
 
   parameters = lrf.GetInitialPoints();
 

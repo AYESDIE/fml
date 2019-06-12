@@ -26,8 +26,8 @@ public:
    * @param labels - Set of labels corresponding to features.
    */
   template <typename OptimizerType>
-  LinearRegression(DatasetType& dataset,
-                   LabelsType& labels,
+  LinearRegression(const DatasetType& dataset,
+                   const LabelsType& labels,
                    OptimizerType& optimizer = fml::optimizer::GradientDescent());
 
   /**

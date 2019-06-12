@@ -268,12 +268,60 @@ TEST_CASE("LogisticRegressionFunctionRegularizedGradient","[LogisticRegressionFu
   REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
 }
 
-TEST_CASE("Evaluate2", "[LogisticRegressionFunction]")
+TEST_CASE("SimpleLogisticRegresion", "[LogisticRegression]")
 {
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
+  xt::xtensor<size_t, 2> labels =
+      xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
+
+  fml::optimizer::GradientDescent gd(0.01, 100000, 1e-9);
+  LogisticRegression<> lr(data, labels, gd);
+
+  xt::xtensor<size_t, 2> pred;
+  lr.Compute(data, pred);
+
+  auto prediter = pred.begin();
+  auto labeliter = labels.begin();
+
+  for (; prediter != pred.end() ; ++prediter, ++labeliter)
+  {
+    REQUIRE((*prediter)==(*labeliter));
+  }
 }
 
-TEST_CASE("er","[asda]")
+TEST_CASE("ComplexLogisticRegresion", "[LogisticRegression]")
 {
+  std::ifstream in_file;
+  in_file.open("data/logistictest.csv");
+  auto dataset = xt::load_csv<double>(in_file);
+  in_file.close();
 
+  xt::xtensor<size_t, 2> labels = xt::view(dataset, xt::all(), xt::keep(3));
+  xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
+
+  fml::math::Normalize(data, 0, 1, 2);
+
+  fml::optimizer::GradientDescent gd(0.001, 100000, 1e-9);
+  LogisticRegression<> lr(data, labels, gd);
+
+  xt::xtensor<size_t, 2> pred;
+  lr.Compute(data, pred);
+
+  size_t total = 0;
+  size_t correct = 0;
+  auto prediter = pred.begin();
+  auto labeliter = labels.begin();
+
+  for (; prediter != pred.end() ; ++prediter, ++labeliter)
+  {
+    total++;
+    if ((*prediter)==(*labeliter))
+      correct++;
+  }
+  
+  REQUIRE((double(correct)/total) >= 0.9);
 }
