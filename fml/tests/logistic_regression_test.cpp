@@ -58,7 +58,7 @@ TEST_CASE("LogisticRegressionFunctionComplexEvaluate","[LogisticRegressionFuncti
   REQUIRE(lrf.Evaluate(parameters) == Approx(0.203498).margin(1e-5));
 }
 
-TEST_CASE("LogisticRegressionFunctionRegularizedEvaluate", "[LinearRegressionFunction]")
+TEST_CASE("LogisticRegressionFunctionRegularizedEvaluate", "[LogisticRegressionFunction]")
 {
   xt::xarray<double> data = {{1, 2, 3},
                              {4, 5, 6},
@@ -154,6 +154,89 @@ TEST_CASE("LogisticRegressionFunctionSimpleGradient","[LogisticRegressionFunctio
   REQUIRE(gradient(0, 0) == Approx(-4.25).margin(1e-5));
   REQUIRE(gradient(1, 0) == Approx(-4.75).margin(1e-5));
   REQUIRE(gradient(2, 0) == Approx(-5.25).margin(1e-5));
+}
+
+TEST_CASE("LogisticRegressionFunctionRegularizedGradient","[LogisticRegressionFunction]")
+{
+  xt::xarray<double> data = {{1, 2, 3},
+                             {4, 5, 6},
+                             {7, 8, 9},
+                             {10, 11, 12}};
+
+  xt::xarray<double> labels =
+      xt::transpose(xt::xarray<double>{{1, 2, 3, 4}});
+
+  double smallReg = 0.5;
+  double bigReg = 20.5;
+
+  LogisticRegressionFunction lrf(data, labels);
+  LogisticRegressionFunction smallRegLrf(data, labels, smallReg);
+  LogisticRegressionFunction bigRegLrf(data, labels, bigReg);
+
+  xt::xarray<double> parameters;
+
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  xt::xarray<double> reg = (smallReg / (2 * smallRegLrf.numFunctions()))
+                           * parameters;
+
+  xt::xarray<double> gradient;
+  lrf.Gradient(parameters, gradient);
+
+  xt::xarray<double> smallGradient;
+  smallRegLrf.Gradient(parameters, smallGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(smallGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(smallGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(smallGradient(2, 0)).margin(1e-5));
+
+  reg = (bigReg / (2 * bigRegLrf.numFunctions()))
+        * parameters;
+
+  xt::xarray<double> bigGradient;
+  bigRegLrf.Gradient(parameters, bigGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(bigGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(bigGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
+
+  parameters = {{9.382532, 0.88376, -7.615013}};
+  parameters = xt::transpose(parameters);
+  reg = (smallReg / (2 * smallRegLrf.numFunctions()))
+        * parameters;
+
+  lrf.Gradient(parameters, gradient);
+
+  smallRegLrf.Gradient(parameters, smallGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(smallGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(smallGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(smallGradient(2, 0)).margin(1e-5));
+
+  reg = (bigReg / (2 * bigRegLrf.numFunctions()))
+        * parameters;
+
+  bigRegLrf.Gradient(parameters, bigGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(bigGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(bigGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
+
+  parameters = {{-5, 3, -7}};
+  parameters = xt::transpose(parameters);
+  reg = (smallReg / (2 * smallRegLrf.numFunctions()))
+        * parameters;
+
+  lrf.Gradient(parameters, gradient);
+
+  smallRegLrf.Gradient(parameters, smallGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(smallGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(smallGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(smallGradient(2, 0)).margin(1e-5));
+
+  reg = (bigReg / (2 * bigRegLrf.numFunctions()))
+        * parameters;
+
+  bigRegLrf.Gradient(parameters, bigGradient);
+  REQUIRE(gradient(0, 0) + reg(0, 0) == Approx(bigGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) + reg(1, 0) == Approx(bigGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
 }
 
 TEST_CASE("Evaluate2", "[LogisticRegressionFunction]")

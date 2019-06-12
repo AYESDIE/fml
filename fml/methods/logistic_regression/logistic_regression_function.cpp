@@ -34,7 +34,8 @@ void LogisticRegressionFunction::Gradient(const xt::xarray<double>& parameters,
 {
   auto sigmoid = 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
   auto error = sigmoid - labels;
-  gradient = xt::linalg::dot(xt::transpose(dataset), error) / numFunctions();
+  gradient = xt::linalg::dot(xt::transpose(dataset), error / numFunctions())
+       + ((lambda / (2 * numFunctions())) * parameters);
 }
 
 size_t LogisticRegressionFunction::numFunctions()
