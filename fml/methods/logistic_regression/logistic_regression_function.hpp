@@ -37,7 +37,20 @@ public:
    * @return - Loss.
    */
   template <typename E>
-  double Evaluate(E& parameters);
+  double Evaluate(const E& parameters);
+
+  /**
+   * This evaluates the loss for given batch of `parameters`.
+   *
+   * @param parameters - Parameters for Linear Regression Function.
+   * @param firstId - Index for first element.
+   * @param batchSize - Size of batch.
+   * @return - Loss.
+   */
+  template <typename E>
+  double Evaluate(const E& parameters,
+                  const size_t& firstId,
+                  const size_t& batchSize);
 
   /**
    * This evaluates the gradient for the given set of `parameters`.
@@ -46,8 +59,14 @@ public:
    * @param gradient - Evaluated gradient.
    */
   template <typename E, typename G>
-  void Gradient(E& parameters,
+  void Gradient(const E& parameters,
                 G& gradient);
+
+  template <typename E, typename G>
+  void Gradient(const E& parameters,
+                const size_t& firstId,
+                G& gradient,
+                const size_t& batchSize);
 
   /**
    * Number of functions in the given dataset.

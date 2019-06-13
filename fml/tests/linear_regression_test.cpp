@@ -12,9 +12,9 @@ using namespace fml::regression;
 TEST_CASE("LinearRegressionFunctionSimpleEvaluate", "[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
   xt::xtensor<double, 2> labels =
       xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
@@ -61,12 +61,64 @@ TEST_CASE("LinearRegressionFunctionComplexEvaluate", "[LinearRegressionFunction]
   REQUIRE(lrf.Evaluate(parameters) == Approx(8376410740.07934).margin(1e-5));
 }
 
+TEST_CASE("LinearRegressionFunctionSeparableEvaluate", "[LinearRegressionFunction]")
+{
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
+
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
+
+  LinearRegressionFunction<> lrf(data, labels);
+
+  xt::xtensor<double, 2> parameters;
+
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  double evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-5));
+
+  parameters = {{0, 0, 1./3}};
+  parameters = xt::transpose(parameters);
+  evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-5));
+
+  // Testing with a L2 regularization parameter.
+  double reg = 1;
+  lrf = LinearRegressionFunction<>(data, labels, reg);
+
+  parameters = {{10., -204.5, 23.5}};
+  parameters = xt::transpose(parameters);
+  evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-5));
+}
+
 TEST_CASE("LinearRegressionFunctionRegularizedEvaluate", "[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
   xt::xtensor<double, 2> labels =
       xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
@@ -216,12 +268,70 @@ TEST_CASE("LinearRegressionFunctionComplexGradient","[LinearRegressionFunction]"
   REQUIRE(gradient(2, 0) == Approx(-366118.919).margin(1e-5));
 }
 
+TEST_CASE("LinearRegressionFunctionSeparableGradient", "[LinearRegressionFunction]")
+{
+
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
+
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
+
+  LinearRegressionFunction<> lrf(data, labels);
+
+  xt::xtensor<double, 2> parameters;
+
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+
+  xt::xtensor<double, 2> evaluatedGradient =
+      xt::zeros<xt::xarray<double>>({3, 1});
+
+  for (int i = 0; i < 4; ++i)
+  {
+    xt::xtensor<double, 2> temp;
+    lrf.Gradient(parameters, i, temp, 1);
+    evaluatedGradient += temp;
+  }
+
+  xt::xtensor<double, 2> gradient;
+  lrf.Gradient(parameters, gradient);
+
+  REQUIRE(gradient(0, 0) == Approx(evaluatedGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(evaluatedGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(evaluatedGradient(2, 0)).margin(1e-5));
+
+  // Testing with L2 Regularization Parameter.
+  double reg = 15.5;
+  lrf = LinearRegressionFunction<>(data, labels, reg);
+
+  evaluatedGradient = xt::zeros<xt::xarray<double>>({3, 1});
+
+  for (int i = 0; i < 4; ++i)
+  {
+    xt::xtensor<double, 2> temp;
+    lrf.Gradient(parameters, i, temp, 1);
+    evaluatedGradient += temp;
+  }
+  // Remove redundant regularizer.
+  evaluatedGradient -= (lrf.numFunctions() - 1) *
+      ((reg / (2 * lrf.numFunctions())) * parameters);
+
+  lrf.Gradient(parameters, gradient);
+
+  REQUIRE(gradient(0, 0) == Approx(evaluatedGradient(0, 0)).margin(1e-5));
+  REQUIRE(gradient(1, 0) == Approx(evaluatedGradient(1, 0)).margin(1e-5));
+  REQUIRE(gradient(2, 0) == Approx(evaluatedGradient(2, 0)).margin(1e-5));
+}
+
 TEST_CASE("LinearRegressionFunctionRegularizedGradient","[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
   xt::xtensor<double, 2> labels =
       xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
