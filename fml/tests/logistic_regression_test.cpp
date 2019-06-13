@@ -58,6 +58,59 @@ TEST_CASE("LogisticRegressionFunctionComplexEvaluate","[LogisticRegressionFuncti
   REQUIRE(lrf.Evaluate(parameters) == Approx(0.203498).margin(1e-5));
 }
 
+TEST_CASE("LogisticRegressionFunctionSeparableEvaluate", "[LogisticRegressionFunction]")
+{
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
+
+  xt::xtensor<size_t, 2> labels =
+      xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
+
+  LogisticRegressionFunction<> lrf(data, labels);
+
+  xt::xarray<double> parameters;
+
+  // These values were calculated by hand.
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  double evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-3));
+
+  parameters = {{9.382532, 0.88376, -7.615013}};
+  parameters = xt::transpose(parameters);
+  evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-3));
+
+  // Using the L2 Regularization Parameter.
+  const double reg = 15.5;
+  lrf = LogisticRegressionFunction<> (data, labels, reg);
+
+  parameters = {{-5, 3, -7}};
+  parameters = xt::transpose(parameters);
+  evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-3));
+}
+
 TEST_CASE("LogisticRegressionFunctionRegularizedEvaluate", "[LogisticRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
