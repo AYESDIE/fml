@@ -22,6 +22,7 @@
 #include <xtensor/xarray.hpp>
 #include <xtensor/xio.hpp>
 #include <xtensor/xview.hpp>
+#include <xtensor/xexpression.hpp>
 #include <xtensor/xmanipulation.hpp>
 #include <xtensor/xcsv.hpp>
 #include <xtensor/xmath.hpp>

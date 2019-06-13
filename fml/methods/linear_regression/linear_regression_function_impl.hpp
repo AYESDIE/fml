@@ -21,7 +21,7 @@ LinearRegressionFunction<DatasetType, LabelsType>::LinearRegressionFunction(Data
 
 template<typename DatasetType, typename LabelsType>
 template<typename E>
-double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(E& parameters)
+double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(const E& parameters)
 {
   // Evaluates the error between the evaluated values and
   // actual values.
@@ -39,8 +39,31 @@ double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(E& parameters
 }
 
 template<typename DatasetType, typename LabelsType>
+template<typename E>
+double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(const E &parameters,
+                                                                   const size_t& firstId,
+                                                                   const size_t& batchSize)
+{
+  size_t lastId = firstId + batchSize;
+
+  auto error = xt::linalg::dot(xt::view(dataset, xt::range(firstId, lastId), xt::all()),
+      parameters) - xt::view(labels, xt::range(firstId, lastId), xt::all());
+
+  // Evaluate the regularization
+  double reg = (lambda / (2 * numFunctions()))
+      * xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  // Evaluate loss.
+  double loss = xt::linalg::dot(xt::transpose(error), error
+      / (2 * batchSize))();
+
+  return loss + reg;
+}
+
+
+template<typename DatasetType, typename LabelsType>
 template<typename E, typename G>
-void LinearRegressionFunction<DatasetType, LabelsType>::Gradient(E& parameters,
+void LinearRegressionFunction<DatasetType, LabelsType>::Gradient(const E& parameters,
                                                                  G& gradient)
 {
   // Evaluates the error between the evaluated values and

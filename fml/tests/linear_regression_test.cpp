@@ -12,9 +12,9 @@ using namespace fml::regression;
 TEST_CASE("LinearRegressionFunctionSimpleEvaluate", "[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
   xt::xtensor<double, 2> labels =
       xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
@@ -61,12 +61,60 @@ TEST_CASE("LinearRegressionFunctionComplexEvaluate", "[LinearRegressionFunction]
   REQUIRE(lrf.Evaluate(parameters) == Approx(8376410740.07934).margin(1e-5));
 }
 
+TEST_CASE("LinearRegressionFunctionSeparableEvaluate", "[LinearRegressionFunction]")
+{
+  xt::xtensor<double, 2> data = {{1, 2, 3},
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
+
+  xt::xtensor<double, 2> labels =
+      xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
+
+  LinearRegressionFunction<> lrf(data, labels);
+
+  xt::xtensor<double, 2> parameters;
+
+  parameters = {{1, 1, 1}};
+  parameters = xt::transpose(parameters);
+  double evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-5));
+
+  parameters = {{0, 0, 1./3}};
+  parameters = xt::transpose(parameters);
+  evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-5));
+
+  parameters = {{10., -204.5, 23.5}};
+  parameters = xt::transpose(parameters);
+  evaluatedLoss = 0;
+  for (int i = 0; i < 4; ++i)
+  {
+    evaluatedLoss += lrf.Evaluate(parameters, i, 1);
+  }
+  evaluatedLoss /= lrf.numFunctions();
+
+  REQUIRE(lrf.Evaluate(parameters) == Approx(evaluatedLoss).margin(1e-5));
+}
+
 TEST_CASE("LinearRegressionFunctionRegularizedEvaluate", "[LinearRegressionFunction]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
-                             {4, 5, 6},
-                             {7, 8, 9},
-                             {10, 11, 12}};
+                                 {4, 5, 6},
+                                 {7, 8, 9},
+                                 {10, 11, 12}};
 
   xt::xtensor<double, 2> labels =
       xt::transpose(xt::xtensor<double, 2>{{1, 2, 3, 4}});
