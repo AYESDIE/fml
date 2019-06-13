@@ -65,9 +65,25 @@ void LogisticRegressionFunction<DatasetType, LabelsType>::Gradient(const E& para
 {
   auto sigmoid = 1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
   auto error = sigmoid - labels;
-  gradient = xt::linalg::dot(xt::transpose(dataset), error / numFunctions())
+  gradient = xt::transpose(xt::linalg::dot(xt::transpose(error) / numFunctions(), dataset))
       + ((lambda / (2 * numFunctions())) * parameters);
+}
 
+template<typename DatasetType, typename LabelsType>
+template<typename E, typename G>
+void
+LogisticRegressionFunction<DatasetType, LabelsType>::Gradient(const E& parameters,
+                                                              const size_t& firstId,
+                                                              G& gradient,
+                                                              const size_t& batchSize)
+{
+  const size_t lastId = firstId + batchSize;
+
+  auto sigmoid = 1 / (1 + xt::exp(-xt::linalg::dot(xt::view(dataset, xt::range(firstId, lastId), xt::all()), parameters)));
+  auto error = sigmoid - xt::view(labels, xt::range(firstId, lastId), xt::all());
+  gradient = xt::transpose(xt::linalg::dot(xt::transpose(error) / numFunctions(),
+      xt::view(dataset, xt::range(firstId, lastId), xt::all())))
+      + ((lambda / (2 * numFunctions())) * parameters);
 }
 
 template<typename DatasetType, typename LabelsType>

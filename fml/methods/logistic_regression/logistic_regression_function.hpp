@@ -62,6 +62,12 @@ public:
   void Gradient(const E& parameters,
                 G& gradient);
 
+  template <typename E, typename G>
+  void Gradient(const E& parameters,
+                const size_t& firstId,
+                G& gradient,
+                const size_t& batchSize);
+
   /**
    * Number of functions in the given dataset.
    */
