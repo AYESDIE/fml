@@ -40,11 +40,11 @@ double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(const E& para
 
 template<typename DatasetType, typename LabelsType>
 template<typename E>
-double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(const E &parameters,
+double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(const E& parameters,
                                                                    const size_t& firstId,
                                                                    const size_t& batchSize)
 {
-  size_t lastId = firstId + batchSize;
+  const size_t lastId = firstId + batchSize;
 
   auto error = xt::linalg::dot(xt::view(dataset, xt::range(firstId, lastId), xt::all()),
       parameters) - xt::view(labels, xt::range(firstId, lastId), xt::all());
@@ -71,8 +71,29 @@ void LinearRegressionFunction<DatasetType, LabelsType>::Gradient(const E& parame
   auto error = xt::linalg::dot(dataset, parameters) - labels;
 
   // Evaluate the regularized gradient.
-  gradient = xt::linalg::dot(xt::transpose(dataset), error
-      / numFunctions()) + ((lambda / (2 * numFunctions())) * parameters);
+  gradient = xt::transpose(xt::linalg::dot(xt::transpose(error)
+      / numFunctions(), dataset)) + ((lambda / (2 * numFunctions())) * parameters);
+}
+
+template<typename DatasetType, typename LabelsType>
+template<typename E, typename G>
+void
+LinearRegressionFunction<DatasetType, LabelsType>::Gradient(const E& parameters,
+                                                            const size_t& firstId,
+                                                            G& gradient,
+                                                            const size_t& batchSize)
+{
+  const size_t lastId = firstId + batchSize;
+
+  // Evaluates the error between the evaluated values and
+  // actual values.
+  auto error = xt::linalg::dot(xt::view(dataset, xt::range(firstId, lastId), xt::all()),
+      parameters) - xt::view(labels, xt::range(firstId, lastId), xt::all());
+
+  // Evaluate the regularized gradient.
+  gradient = xt::transpose(xt::linalg::dot(xt::transpose(error)
+      / numFunctions(), xt::view(dataset, xt::range(firstId, lastId), xt::all())))
+      + ((lambda / (2 * numFunctions())) * parameters);
 }
 
 template<typename DatasetType, typename LabelsType>
@@ -87,8 +108,7 @@ xt::xtensor<double, 2> LinearRegressionFunction<DatasetType, LabelsType>::GetIni
   return xt::ones<xt::xarray<double>>({int(dataset.shape(1)), 1});
 }
 
-}
-}
-
+} // namespace regression
+} // namespace fml
 
 #endif //FML_METHODS_LINEAR_REGRESSION_LINEAR_REGRESSION_FUNCTION_IMPL_HPP

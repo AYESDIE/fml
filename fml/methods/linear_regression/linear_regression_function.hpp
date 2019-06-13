@@ -66,6 +66,20 @@ public:
                 G& gradient);
 
   /**
+   * This evaluates the gradient for the given batch of `parameters`.
+   *
+   * @param parameters - Parameters for Linear Regression Function.
+   * @param firstId - First ID of the feature.
+   * @param gradient - Evaluated gradient.
+   * @param batchSize - Size of batch.
+   */
+  template <typename E, typename G>
+  void Gradient(const E& parameters,
+                const size_t& firstId,
+                G& gradient,
+                const size_t& batchSize = 1);
+
+  /**
    * Number of functions in the given dataset.
    */
   size_t numFunctions();
