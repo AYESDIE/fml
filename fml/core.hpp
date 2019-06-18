@@ -36,6 +36,6 @@
 #include "fml/core/math/normalize.hpp"
 
 // Comment this to disable debug console.
-#define FML_DEBUG_CONSOLE
+//#define FML_DEBUG_CONSOLE
 
 #endif //FML_HPP
