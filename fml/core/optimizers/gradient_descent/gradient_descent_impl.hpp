@@ -51,7 +51,7 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
       return overallObjective;
     }
 
-    xt::xarray<double> gradient;
+    xt::xtensor<double, 2> gradient;
     function.Gradient(iterate, gradient);
 
     // Update the iterate values.

@@ -1,5 +1,7 @@
 set(DIRS
-    gradient_descent)
+    gradient_descent
+    sgd
+    problems)
 
 foreach(dir ${DIRS})
     add_subdirectory(${dir})

@@ -3,12 +3,12 @@
 //
 
 #include <fml/core/optimizers/gradient_descent/gradient_descent.hpp>
+#include <fml/core/optimizers/problems/gradient_descent_test_function.hpp>
 #include "catch.hpp"
-#include "util/test_function.hpp"
 
 TEST_CASE("GradientDescent", "[GradientDescentTest]")
 {
-  fml::test::TestFunction f;
+  fml::test::GradientDescentTestFunction f;
 
   fml::optimizer::GradientDescent gd(0.01, 1000, 1e-9);
 

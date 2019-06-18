@@ -3,6 +3,7 @@
 //
 
 #include <fml/methods/logistic_regression/logistic_regression.hpp>
+#include <fml/core/optimizers/sgd/sgd.hpp>
 #include <fml/core.hpp>
 #include "catch.hpp"
 
@@ -389,8 +390,8 @@ TEST_CASE("SimpleLogisticRegresion", "[LogisticRegression]")
   xt::xtensor<size_t, 2> labels =
       xt::transpose(xt::xarray<double>{{0, 0, 1, 1}});
 
-  fml::optimizer::GradientDescent gd(0.01, 100000, 1e-9);
-  LogisticRegression<> lr(data, labels, gd);
+  fml::optimizer::SGD sgd(0.01, 10000, 1e-5, 1);
+  LogisticRegression<> lr(data, labels, sgd);
 
   xt::xtensor<size_t, 2> pred;
   lr.Compute(data, pred);
