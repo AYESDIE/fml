@@ -1,5 +1,6 @@
 set(SOURCES
-    gradient_descent_test_function.hpp)
+    gradient_descent_test_function.hpp
+    sgd_test_function.hpp)
 
 set(DIR_SRCS)
 foreach(file ${SOURCES})

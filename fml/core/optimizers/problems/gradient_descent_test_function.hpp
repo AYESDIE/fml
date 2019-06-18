@@ -5,6 +5,8 @@
 #ifndef FML_CORE_OPTIMIZERS_PROBLEMS_GRADIENT_DESCENT_TEST_FUNCTION_HPP
 #define FML_CORE_OPTIMIZERS_PROBLEMS_GRADIENT_DESCENT_TEST_FUNCTION_HPP
 
+#include "fml/core.hpp"
+
 namespace fml {
 namespace test {
 
