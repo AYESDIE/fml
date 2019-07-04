@@ -60,7 +60,7 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
       currentFunction = 0;
     }
 
-    xt::xtensor<double, 2> gradient;
+    E gradient;
     function.Gradient(iterate, currentFunction, gradient, batchSize);
 
     // Update the iterate values.

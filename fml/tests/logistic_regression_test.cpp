@@ -380,7 +380,7 @@ TEST_CASE("LogisticRegressionFunctionRegularizedGradient","[LogisticRegressionFu
   REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
 }
 
-TEST_CASE("SimpleLogisticRegresion", "[LogisticRegression]")
+TEST_CASE("SimpleLogisticRegression", "[LogisticRegression]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
                                  {4, 5, 6},
@@ -405,7 +405,7 @@ TEST_CASE("SimpleLogisticRegresion", "[LogisticRegression]")
   }
 }
 
-TEST_CASE("ComplexLogisticRegresion", "[LogisticRegression]")
+TEST_CASE("ComplexLogisticRegression", "[LogisticRegression]")
 {
   std::ifstream in_file;
   in_file.open("data/logistictest.csv");
