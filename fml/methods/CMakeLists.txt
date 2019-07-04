@@ -1,6 +1,7 @@
 set(DIRS
     linear_regression
-    logistic_regression)
+    logistic_regression
+    softmax_regression)
 
 foreach(dir ${DIRS})
     add_subdirectory(${dir})

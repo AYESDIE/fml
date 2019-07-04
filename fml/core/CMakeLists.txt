@@ -1,6 +1,7 @@
 set(DIRS
     optimizers
-    math)
+    math
+    manipulate)
 
 foreach(dir ${DIRS})
     add_subdirectory(${dir})

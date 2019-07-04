@@ -17,7 +17,7 @@ public:
   GradientDescentTestFunction() { }
 
   //! Get the starting point.
-  xt::xarray<double> GetInitialPoint() const { return xt::transpose(xt::xtensor<double, 2>{{1, 3, 2}}); }
+  xt::xtensor<double, 2> GetInitialPoint() const { return xt::transpose(xt::xtensor<double, 2>{{1, 3, 2}}); }
 
   //! Evaluate a function.
   double Evaluate(const xt::xtensor<double, 2>& coordinates) const;
