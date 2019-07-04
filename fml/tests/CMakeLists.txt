@@ -6,6 +6,7 @@ set(FML_TESTS_SOURCES
     linear_regression_test.cpp
     logistic_regression_test.cpp
     sgd_test.cpp
+    softmax_regression_test.cpp
     )
 
 add_executable(${PROJECT_NAME} ${FML_TESTS_SOURCES})
