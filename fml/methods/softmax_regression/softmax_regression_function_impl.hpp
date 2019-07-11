@@ -21,7 +21,35 @@ SoftmaxRegressionFunction<DatasetType, LabelsType>::SoftmaxRegressionFunction(
     numClasses(numClasses),
     lambda(lambda)
 {
-  groundTruth = getGroundTruthMatrix(labels, numClasses);
+  groundTruth = fml::manipulate::getGroundTruthMatrix(labels, numClasses);
+}
+
+template <typename DatasetType, typename LabelsType>
+template <typename E>
+double SoftmaxRegressionFunction<DatasetType, LabelsType>::Evaluate(const E& parameters)
+{
+  // Evaluate the loss using sigmoid function
+  auto sigmoid =  1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
+  auto error = - (labels * xt::log(sigmoid)) - ((1 - labels) * xt::log(1 - sigmoid));
+  double loss = xt::sum(error / numFunctions())();
+
+  // Evaluate the regularization
+  double reg = (lambda / (2 * numFunctions()))
+      * xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  return loss + reg;
+}
+
+template<typename DatasetType, typename LabelsType>
+size_t SoftmaxRegressionFunction<DatasetType, LabelsType>::numFunctions()
+{
+  return dataset.shape(0);
+}
+
+template<typename DatasetType, typename LabelsType>
+xt::xtensor<double, 2> SoftmaxRegressionFunction<DatasetType, LabelsType>::GetInitialPoints()
+{
+  return xt::zeros<xt::xarray<double>>({int(dataset.shape(1)), numClasses});
 }
 
 } // namespace regression
