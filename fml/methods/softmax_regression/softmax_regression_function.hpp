@@ -35,9 +35,9 @@ public:
    * @param parameters - Parameters for Softmax Regression Function.
    * @param gradient - Evaluated gradient.
    */
-  template <typename E, typename G>
-  void Gradient(const E& parameters,
-                G& gradient);
+  // template <typename E, typename G>
+  // void Gradient(const E& parameters,
+  //               G& gradient);
   
   /**
    * Number of functions in the given dataset.
@@ -57,7 +57,7 @@ private:
   LabelsType labels;
 
   /// Ground Truth Matrix
-  xt::xtensor<double, 2> groundTruth;
+  xt::xtensor<size_t, 2> groundTruth;
 
   /// Number of classes
   size_t numClasses;
