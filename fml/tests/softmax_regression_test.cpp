@@ -8,13 +8,19 @@
 
 TEST_CASE("asdad","[asdada]")
 {
-  xt::xtensor<size_t, 2> a1 = xt::ones<size_t>({1, 7});
-  a1[0, 3] = 0;
-  a1[0, 6] = 0;
-  a1[0, 4] = 2;
-  a1 = xt::transpose(a1);
-  std::cout << a1;
-  auto gt = fml::manipulate::getGroundTruthMatrix(a1, 3);
-  std::cout << std::endl << gt << std::endl;
-  REQUIRE(true);
+    std::ifstream in_file;
+    in_file.open("data/iris.csv");
+    auto dataset = xt::load_csv<double>(in_file);
+    in_file.close();
+
+    xt::xtensor<size_t, 2> labels = xt::view(dataset, xt::all(), xt::keep(5));
+    xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2, 3, 4));
+
+    REQUIRE(true);
+
+    fml::regression::SoftmaxRegressionFunction<> srf(data, labels, 3);
+    auto params = srf.GetInitialPoints();
+    auto loss = srf.Evaluate(params);
+
+    REQUIRE(true);
 }
