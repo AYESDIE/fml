@@ -417,8 +417,8 @@ TEST_CASE("ComplexLogisticRegression", "[LogisticRegression]")
 
   fml::math::Normalize(data, 0, 1, 2);
 
-  fml::optimizer::GradientDescent gd(0.001, 100000, 1e-9);
-  LogisticRegression<> lr(data, labels, gd);
+  fml::optimizer::SGD sgd(0.1, 100000, 1e-9, 20);
+  LogisticRegression<> lr(data, labels, sgd);
 
   xt::xtensor<size_t, 2> pred;
   lr.Compute(data, pred);
@@ -435,5 +435,5 @@ TEST_CASE("ComplexLogisticRegression", "[LogisticRegression]")
       correct++;
   }
 
-  REQUIRE((double(correct)/total) >= 0.9);
+  REQUIRE((double(correct)/total) >= 0.85);
 }

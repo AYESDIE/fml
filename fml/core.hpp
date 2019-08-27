@@ -34,10 +34,10 @@
 
 #include <xtensor-blas/xlinalg.hpp>
 
+// Comment this to disable debug console.
+#define FML_DEBUG_CONSOLE
+
 #include "fml/core/math/normalize.hpp"
 #include "fml/core/manipulate/ground_truth.hpp"
-
-// Comment this to disable debug console.
-//#define FML_DEBUG_CONSOLE
 
 #endif //FML_HPP

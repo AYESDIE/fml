@@ -28,14 +28,15 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
   // Iterate
   for (size_t i = 1; i < maxIterations; ++i, ++currentFunction)
   {
+    #ifdef FML_DEBUG_CONSOLE
+      if ((i % (maxIterations / 10)) == 0)
+        std::cout << "SGD: iteration " << i << ", objective " << overallObjective
+            << "." << std::endl;
+    #endif
+
     // Is this iteration the start of a sequence?
     if ((currentFunction % numFunctions) == 0)
     {
-      #ifdef FML_DEBUG_CONSOLE
-      std::cout << "SGD: iteration " << i << ", objective " << overallObjective
-          << "." << std::endl;
-      #endif
-
       if (overallObjective != overallObjective)
       {
         #ifdef FML_DEBUG_CONSOLE
