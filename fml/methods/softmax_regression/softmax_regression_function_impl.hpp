@@ -6,6 +6,7 @@
 #define FML_METHODS_SOFTMAX_REGRESSION_SOFTMAX_REGRESSION_FUNCTION_IMPL_HPP
 
 #include "softmax_regression_function.hpp"
+#include "fml/core/manipulate/ground_truth.hpp"
 
 namespace fml {
 namespace regression {
