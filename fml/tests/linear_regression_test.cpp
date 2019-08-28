@@ -4,6 +4,7 @@
 
 #include <fml/methods/linear_regression/linear_regression.hpp>
 #include <fml/core.hpp>
+#include <fml/core/math/normalize.hpp>
 #include "catch.hpp"
 
 using namespace fml;
@@ -35,30 +36,6 @@ TEST_CASE("LinearRegressionFunctionSimpleEvaluate", "[LinearRegressionFunction]"
   parameters = {{10., -204.5, 23.5}};
   parameters = xt::transpose(parameters);
   REQUIRE(lrf.Evaluate(parameters) == 770672.625);
-}
-
-TEST_CASE("LinearRegressionFunctionComplexEvaluate", "[LinearRegressionFunction]")
-{
-  std::ifstream in_file;
-  in_file.open("data/in.csv");
-  auto dataset = xt::load_csv<double>(in_file);
-  in_file.close();
-
-  xt::xtensor<double, 2> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
-
-  math::Normalize(data, 1, 2);
-
-  LinearRegressionFunction<> lrf(data, labels);
-
-  auto parameters = lrf.GetInitialPoints();
-  REQUIRE(lrf.Evaluate(parameters)
-      == Approx(65590064403.02206).margin(1e-5));
-
-  // Value of parameter for which the function is optimized.
-  parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
-  parameters = xt::transpose(parameters);
-  REQUIRE(lrf.Evaluate(parameters) == Approx(8376410740.07934).margin(1e-5));
 }
 
 TEST_CASE("LinearRegressionFunctionSeparableEvaluate", "[LinearRegressionFunction]")
@@ -235,37 +212,6 @@ TEST_CASE("LinearRegressionFunctionSimpleGradient","[LinearRegressionFunction]")
   REQUIRE(gradient(0, 0) == -7980.25);
   REQUIRE(gradient(1, 0) == -9080.75);
   REQUIRE(gradient(2, 0) == -10181.25);
-}
-
-TEST_CASE("LinearRegressionFunctionComplexGradient","[LinearRegressionFunction]")
-{
-  std::ifstream in_file;
-  in_file.open("data/in.csv");
-  auto dataset = xt::load_csv<double>(in_file);
-  in_file.close();
-
-  xt::xtensor<double, 2> labels = xt::view(dataset, xt::all(), xt::keep(3));
-  xt::xtensor<double, 2> data = xt::view(dataset, xt::all(), xt::keep(0, 1, 2));
-
-  math::Normalize(data, 1, 2);
-
-  LinearRegressionFunction<> lrf(data, labels);
-  auto parameters = lrf.GetInitialPoints();
-
-  xt::xtensor<double, 2> gradient;
-  lrf.Gradient(parameters, gradient);
-  REQUIRE(gradient(0, 0) == Approx(-340411.659574).margin(1e-5));
-  REQUIRE(gradient(1, 0) == Approx(-22932.097461).margin(1e-5));
-  REQUIRE(gradient(2, 0) == Approx(-1120353.8234).margin(1e-5));
-
-  // Value of parameter for which the function is optimized.
-  parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
-  parameters = xt::transpose(parameters);
-
-  lrf.Gradient(parameters, gradient);
-  REQUIRE(gradient(0, 0) == Approx(-110800.8435387).margin(1e-5));
-  REQUIRE(gradient(1, 0) == Approx(-2396.0350924).margin(1e-5));
-  REQUIRE(gradient(2, 0) == Approx(-366118.919).margin(1e-5));
 }
 
 TEST_CASE("LinearRegressionFunctionSeparableGradient", "[LinearRegressionFunction]")

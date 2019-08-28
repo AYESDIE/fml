@@ -5,6 +5,7 @@
 #ifndef FML_CORE_OPTIMIZERS_SGD_SGD_IMPL_HPP
 #define FML_CORE_OPTIMIZERS_SGD_SGD_IMPL_HPP
 
+#include "fml/core/log/log.hpp"
 #include "sgd.hpp"
 
 namespace fml {
@@ -28,29 +29,25 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
   // Iterate
   for (size_t i = 1; i < maxIterations; ++i, ++currentFunction)
   {
+    
+      if ((i % (maxIterations / 10)) == 0)
+        fml::log(std::cout, "SGD: iteration ", i, ", objective ",
+            overallObjective, ".");
+
     // Is this iteration the start of a sequence?
     if ((currentFunction % numFunctions) == 0)
     {
-      #ifdef FML_DEBUG_CONSOLE
-      std::cout << "SGD: iteration " << i << ", objective " << overallObjective
-          << "." << std::endl;
-      #endif
-
       if (overallObjective != overallObjective)
       {
-        #ifdef FML_DEBUG_CONSOLE
-        std::cout << "SGD: converged to " << overallObjective << "; terminating"
-            << " with failure.  Try a smaller step size?" << std::endl;
-        #endif
+        fml::log(std::cout, "SGD: converged to ", overallObjective, "; terminating",
+            " with failure.  Try a smaller step size?");
         return overallObjective;
       }
 
       if (std::abs(lastObjective - overallObjective) < tolerance)
       {
-        #ifdef FML_DEBUG_CONSOLE
-        std::cout << "SGD: minimized within tolerance " << tolerance << "; "
-            << "terminating optimization." << std::endl;
-        #endif
+        fml::log(std::cout, "SGD: minimized within tolerance ", tolerance, "; ",
+            "terminating optimization.");
         return overallObjective;
       }
 
@@ -60,7 +57,7 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
       currentFunction = 0;
     }
 
-    xt::xtensor<double, 2> gradient;
+    E gradient;
     function.Gradient(iterate, currentFunction, gradient, batchSize);
 
     // Update the iterate values.
@@ -70,10 +67,8 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
     overallObjective += function.Evaluate(iterate, currentFunction, batchSize);
   }
 
-  #ifdef FML_DEBUG_CONSOLE
-  std::cout << "SGD: maximum iterations (" << maxIterations << ") reached; "
-      << "terminating optimization." << std::endl;
-  #endif
+  fml::log(std::cout, "SGD: maximum iterations (", maxIterations, ") reached; ",
+      "terminating optimization.");
 
   return overallObjective;
 }

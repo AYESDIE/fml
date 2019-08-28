@@ -6,6 +6,7 @@
 #define FML_OPTIMIZER_GRADIENT_DESCENT_GRADIENT_DESCENT_IMPL_HPP
 
 #include "gradient_descent.hpp"
+#include "fml/core/log/log.hpp"
 
 namespace fml {
 namespace optimizer {
@@ -24,34 +25,27 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
   {
     overallObjective = function.Evaluate(iterate);
 
-    #ifdef FML_DEBUG_CONSOLE
-    if (i % size_t(maxIterations * 0.1) == 0)
-      std::cout << "Gradient Descent: iteration " <<  i  << " / " << maxIterations
-          << ", objective " << overallObjective << "." << std::endl;
-    #endif
+    if (i % size_t(maxIterations / 10) == 0)
+      fml::log(std::cout, "Gradient Descent: iteration ", i, " / ", maxIterations,
+          ", objective ", overallObjective, ".");
 
     if (std::isnan(overallObjective) || std::isinf(overallObjective))
     {
-      #ifdef FML_DEBUG_CONSOLE
-      std::cout << "Gradient Descent: converged to " << overallObjective
-          << "; terminating" << " with failure.  Try a smaller step size?"
-          << std::endl;
-      #endif
+      fml::log(std::cout, "Gradient Descent: converged to ", overallObjective,
+          "; terminating", " with failure.  Try a smaller step size?");
 
       return overallObjective;
     }
 
     if (std::abs(lastObjective - overallObjective) < tolerance)
     {
-      #ifdef FML_DEBUG_CONSOLE
-      std::cout << "Gradient Descent: minimized within tolerance "
-          << tolerance << "; " << "terminating optimization." << std::endl;
-      #endif
+      fml::log(std::cout, "Gradient Descent: minimized within tolerance ",
+          tolerance, "; ", "terminating optimization.");
 
       return overallObjective;
     }
 
-    xt::xtensor<double, 2> gradient;
+    E gradient;
     function.Gradient(iterate, gradient);
 
     // Update the iterate values.
@@ -60,10 +54,8 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
     lastObjective = overallObjective;
   }
 
-  #ifdef FML_DEBUG_CONSOLE
-  std::cout << "Gradient Descent: maximum iterations (" << maxIterations
-      << ") reached; " << "terminating optimization." << std::endl;
-  #endif
+  fml::log(std::cout, "Gradient Descent: maximum iterations (", maxIterations,
+      ") reached; ", "terminating optimization.");
 
   return overallObjective;
 }

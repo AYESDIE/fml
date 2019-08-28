@@ -1,6 +1,8 @@
 set(DIRS
+    log
     optimizers
-    math)
+    math
+    manipulate)
 
 foreach(dir ${DIRS})
     add_subdirectory(${dir})

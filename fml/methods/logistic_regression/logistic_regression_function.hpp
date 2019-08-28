@@ -5,7 +5,7 @@
 #ifndef FML_METHODS_LOGISTIC_REGRESSION_LOGISTIC_REGRESSION_FUNCTION_HPP
 #define FML_METHODS_LOGISTIC_REGRESSION_LOGISTIC_REGRESSION_FUNCTION_HPP
 
-#include "../../core.hpp"
+#include "fml/core.hpp"
 
 namespace fml {
 namespace regression {
@@ -62,6 +62,13 @@ public:
   void Gradient(const E& parameters,
                 G& gradient);
 
+  /**
+   * This evaluates the gradient for the given batch of `parameters`.
+   * @param parameters - Parameters for Linear Regression Function.
+   * @param firstId - Index for first element.
+   * @param batchSize - Size of batch.   
+   * @param gradient - Evaluated gradient.
+   */
   template <typename E, typename G>
   void Gradient(const E& parameters,
                 const size_t& firstId,

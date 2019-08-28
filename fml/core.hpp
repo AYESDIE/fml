@@ -30,12 +30,15 @@
 #include <xtensor/xrandom.hpp>
 #include <xtensor/xnorm.hpp>
 #include <xtensor/xfixed.hpp>
+#include <xtensor/xindex_view.hpp>
 
 #include <xtensor-blas/xlinalg.hpp>
 
-#include "fml/core/math/normalize.hpp"
+#endif //FML_HPP
 
 // Comment this to disable debug console.
+#ifndef FML_DEBUG_CONSOLE
+
 //#define FML_DEBUG_CONSOLE
 
-#endif //FML_HPP
+#endif

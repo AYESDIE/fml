@@ -34,9 +34,7 @@ void Normalize(E& xexpression,
                size_t index,
                I... indices)
 {
-  #ifdef FML_DEBUG_CONSOLE
-  std::cout << "Normalize: index: " << index << "." << std::endl;
-  #endif
+  fml::log(std::cout, "Normalize: index: ", index, ".");
 
   double min = xt::amin(xexpression, {0})(index);
   double max = xt::amax(xexpression, {0})(index);
@@ -49,9 +47,7 @@ void Normalize(E& xexpression,
     xt::view(xexpression,xt::all(), xt::keep(index)) /= (max - min);
   }
   else
-    #ifdef FML_DEBUG_CONSOLE
-    std::cout << "Normalize: max - min = 0; Terminating." << std::endl;
-    #endif
+    fml::log(std::cout, "Normalize: max - min = 0; Terminating.");
 
   fml::math::Normalize(xexpression, indices...);
 }

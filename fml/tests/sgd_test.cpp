@@ -4,6 +4,7 @@
 
 #include <fml/core/optimizers/sgd/sgd.hpp>
 #include <fml/core/optimizers/problems/sgd_test_function.hpp>
+#include <fml/core/log/log.hpp>
 #include "catch.hpp"
 
 TEST_CASE("SGD", "[SGD]")
