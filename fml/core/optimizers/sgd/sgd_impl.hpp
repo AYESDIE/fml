@@ -29,30 +29,25 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
   // Iterate
   for (size_t i = 1; i < maxIterations; ++i, ++currentFunction)
   {
-    #ifdef FML_DEBUG_CONSOLE
+    
       if ((i % (maxIterations / 10)) == 0)
         fml::log(std::cout, "SGD: iteration ", i, ", objective ",
             overallObjective, ".");
-    #endif
 
     // Is this iteration the start of a sequence?
     if ((currentFunction % numFunctions) == 0)
     {
       if (overallObjective != overallObjective)
       {
-        #ifdef FML_DEBUG_CONSOLE
         fml::log(std::cout, "SGD: converged to ", overallObjective, "; terminating",
             " with failure.  Try a smaller step size?");
-        #endif
         return overallObjective;
       }
 
       if (std::abs(lastObjective - overallObjective) < tolerance)
       {
-        #ifdef FML_DEBUG_CONSOLE
         fml::log(std::cout, "SGD: minimized within tolerance ", tolerance, "; ",
             "terminating optimization.");
-        #endif
         return overallObjective;
       }
 
@@ -72,10 +67,8 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
     overallObjective += function.Evaluate(iterate, currentFunction, batchSize);
   }
 
-  #ifdef FML_DEBUG_CONSOLE
   fml::log(std::cout, "SGD: maximum iterations (", maxIterations, ") reached; ",
       "terminating optimization.");
-  #endif
 
   return overallObjective;
 }

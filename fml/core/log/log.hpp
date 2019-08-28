@@ -35,11 +35,13 @@ template <typename outStream,
           typename outType,
           typename... Ts>
 void log(outStream& os,
-         const outType output,
+         const outType& output,
          const Ts... args)
 {
+  #ifdef FML_DEBUG_CONSOLE
   os << output;
   log(os, args...);
+  #endif
 }
 
 } // namespace fml
