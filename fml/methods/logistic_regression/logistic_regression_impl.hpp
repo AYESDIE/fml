@@ -18,17 +18,13 @@ LogisticRegression<DatasetType, LabelsType>::LogisticRegression(const DatasetTyp
 
   parameters = lrf.GetInitialPoints();
 
-  #ifdef FML_DEBUG_CONSOLE
-  std::cout << "Logistic Regression: Start" << std::endl;
-  #endif
+  fml::log(std::cout, "Logistic Regression: Start");
 
   double overallObjective = optimizer.Optimize(lrf, parameters);
 
-  #ifdef FML_DEBUG_CONSOLE
-  std::cout << "Logistic Regression: Stop" << std::endl;
-  std::cout << "Logistic Regression: Overall objective: "
-      << overallObjective << "." << std::endl;
-  #endif
+  fml::log(std::cout, "Logistic Regression: Stop");
+  fml::log(std::cout, "Logistic Regression: Overall objective: ",
+      overallObjective, ".");
 }
 
 template<typename DatasetType, typename LabelsType>

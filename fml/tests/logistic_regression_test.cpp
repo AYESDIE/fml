@@ -4,6 +4,7 @@
 
 #include <fml/methods/logistic_regression/logistic_regression.hpp>
 #include <fml/core/optimizers/sgd/sgd.hpp>
+#include <fml/core/math/normalize.hpp>
 #include <fml/core.hpp>
 #include "catch.hpp"
 
@@ -380,7 +381,7 @@ TEST_CASE("LogisticRegressionFunctionRegularizedGradient","[LogisticRegressionFu
   REQUIRE(gradient(2, 0) + reg(2, 0) == Approx(bigGradient(2, 0)).margin(1e-5));
 }
 
-TEST_CASE("SimpleLogisticRegresion", "[LogisticRegression]")
+TEST_CASE("SimpleLogisticRegression", "[LogisticRegression]")
 {
   xt::xtensor<double, 2> data = {{1, 2, 3},
                                  {4, 5, 6},
@@ -405,7 +406,7 @@ TEST_CASE("SimpleLogisticRegresion", "[LogisticRegression]")
   }
 }
 
-TEST_CASE("ComplexLogisticRegresion", "[LogisticRegression]")
+TEST_CASE("ComplexLogisticRegression", "[LogisticRegression]")
 {
   std::ifstream in_file;
   in_file.open("data/logistictest.csv");
@@ -417,8 +418,8 @@ TEST_CASE("ComplexLogisticRegresion", "[LogisticRegression]")
 
   fml::math::Normalize(data, 0, 1, 2);
 
-  fml::optimizer::GradientDescent gd(0.001, 100000, 1e-9);
-  LogisticRegression<> lr(data, labels, gd);
+  fml::optimizer::SGD sgd(0.1, 100000, 1e-9, 20);
+  LogisticRegression<> lr(data, labels, sgd);
 
   xt::xtensor<size_t, 2> pred;
   lr.Compute(data, pred);
@@ -435,5 +436,5 @@ TEST_CASE("ComplexLogisticRegresion", "[LogisticRegression]")
       correct++;
   }
 
-  REQUIRE((double(correct)/total) >= 0.9);
+  REQUIRE((double(correct)/total) >= 0.85);
 }
