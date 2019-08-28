@@ -25,28 +25,22 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
   {
     overallObjective = function.Evaluate(iterate);
 
-    #ifdef FML_DEBUG_CONSOLE
-    if (i % size_t(maxIterations * 0.1) == 0)
+    if (i % size_t(maxIterations / 10) == 0)
       fml::log(std::cout, "Gradient Descent: iteration ", i, " / ", maxIterations,
           ", objective ", overallObjective, ".");
-    #endif
 
     if (std::isnan(overallObjective) || std::isinf(overallObjective))
     {
-      #ifdef FML_DEBUG_CONSOLE
       fml::log(std::cout, "Gradient Descent: converged to ", overallObjective,
           "; terminating", " with failure.  Try a smaller step size?");
-      #endif
 
       return overallObjective;
     }
 
     if (std::abs(lastObjective - overallObjective) < tolerance)
     {
-      #ifdef FML_DEBUG_CONSOLE
       fml::log(std::cout, "Gradient Descent: minimized within tolerance ",
           tolerance, "; ", "terminating optimization.");
-      #endif
 
       return overallObjective;
     }
@@ -60,10 +54,8 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
     lastObjective = overallObjective;
   }
 
-  #ifdef FML_DEBUG_CONSOLE
   fml::log(std::cout, "Gradient Descent: maximum iterations (", maxIterations,
       ") reached; ", "terminating optimization.");
-  #endif
 
   return overallObjective;
 }
