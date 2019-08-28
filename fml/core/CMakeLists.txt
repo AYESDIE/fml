@@ -1,4 +1,5 @@
 set(DIRS
+    log
     optimizers
     math
     manipulate)

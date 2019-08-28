@@ -4,6 +4,7 @@
 
 #include <fml/methods/linear_regression/linear_regression.hpp>
 #include <fml/core.hpp>
+#include <fml/core/math/normalize.hpp>
 #include "catch.hpp"
 
 using namespace fml;
