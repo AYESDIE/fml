@@ -37,4 +37,8 @@
 #endif //FML_HPP
 
 // Comment this to disable debug console.
+#ifndef FML_DEBUG_CONSOLE
+
 //#define FML_DEBUG_CONSOLE
+
+#endif

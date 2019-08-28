@@ -5,6 +5,7 @@
 #ifndef FML_CORE_OPTIMIZERS_SGD_SGD_IMPL_HPP
 #define FML_CORE_OPTIMIZERS_SGD_SGD_IMPL_HPP
 
+#include "fml/core/log/log.hpp"
 #include "sgd.hpp"
 
 namespace fml {
@@ -30,8 +31,8 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
   {
     #ifdef FML_DEBUG_CONSOLE
       if ((i % (maxIterations / 10)) == 0)
-        std::cout << "SGD: iteration " << i << ", objective " << overallObjective
-            << "." << std::endl;
+        fml::log(std::cout, "SGD: iteration ", i, ", objective ",
+            overallObjective, ".");
     #endif
 
     // Is this iteration the start of a sequence?
@@ -40,8 +41,8 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
       if (overallObjective != overallObjective)
       {
         #ifdef FML_DEBUG_CONSOLE
-        std::cout << "SGD: converged to " << overallObjective << "; terminating"
-            << " with failure.  Try a smaller step size?" << std::endl;
+        fml::log(std::cout, "SGD: converged to ", overallObjective, "; terminating",
+            " with failure.  Try a smaller step size?");
         #endif
         return overallObjective;
       }
@@ -49,8 +50,8 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
       if (std::abs(lastObjective - overallObjective) < tolerance)
       {
         #ifdef FML_DEBUG_CONSOLE
-        std::cout << "SGD: minimized within tolerance " << tolerance << "; "
-            << "terminating optimization." << std::endl;
+        fml::log(std::cout, "SGD: minimized within tolerance ", tolerance, "; ",
+            "terminating optimization.");
         #endif
         return overallObjective;
       }
@@ -72,8 +73,8 @@ double SGD::Optimize(DifferentiableFunctionType &function, E &iterate)
   }
 
   #ifdef FML_DEBUG_CONSOLE
-  std::cout << "SGD: maximum iterations (" << maxIterations << ") reached; "
-      << "terminating optimization." << std::endl;
+  fml::log(std::cout, "SGD: maximum iterations (", maxIterations, ") reached; ",
+      "terminating optimization.");
   #endif
 
   return overallObjective;

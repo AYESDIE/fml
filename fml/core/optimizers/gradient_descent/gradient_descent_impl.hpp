@@ -6,6 +6,7 @@
 #define FML_OPTIMIZER_GRADIENT_DESCENT_GRADIENT_DESCENT_IMPL_HPP
 
 #include "gradient_descent.hpp"
+#include "fml/core/log/log.hpp"
 
 namespace fml {
 namespace optimizer {
@@ -26,16 +27,15 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
 
     #ifdef FML_DEBUG_CONSOLE
     if (i % size_t(maxIterations * 0.1) == 0)
-      std::cout << "Gradient Descent: iteration " <<  i  << " / " << maxIterations
-          << ", objective " << overallObjective << "." << std::endl;
+      fml::log(std::cout, "Gradient Descent: iteration ", i, " / ", maxIterations,
+          ", objective ", overallObjective, ".");
     #endif
 
     if (std::isnan(overallObjective) || std::isinf(overallObjective))
     {
       #ifdef FML_DEBUG_CONSOLE
-      std::cout << "Gradient Descent: converged to " << overallObjective
-          << "; terminating" << " with failure.  Try a smaller step size?"
-          << std::endl;
+      fml::log(std::cout, "Gradient Descent: converged to ", overallObjective,
+          "; terminating", " with failure.  Try a smaller step size?");
       #endif
 
       return overallObjective;
@@ -44,8 +44,8 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
     if (std::abs(lastObjective - overallObjective) < tolerance)
     {
       #ifdef FML_DEBUG_CONSOLE
-      std::cout << "Gradient Descent: minimized within tolerance "
-          << tolerance << "; " << "terminating optimization." << std::endl;
+      fml::log(std::cout, "Gradient Descent: minimized within tolerance ",
+          tolerance, "; ", "terminating optimization.");
       #endif
 
       return overallObjective;
@@ -61,8 +61,8 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
   }
 
   #ifdef FML_DEBUG_CONSOLE
-  std::cout << "Gradient Descent: maximum iterations (" << maxIterations
-      << ") reached; " << "terminating optimization." << std::endl;
+  fml::log(std::cout, "Gradient Descent: maximum iterations (", maxIterations,
+      ") reached; ", "terminating optimization.");
   #endif
 
   return overallObjective;

@@ -9,23 +9,37 @@
 
 namespace fml
 {
-void log(std::ostream& os)
+/**
+ * Last call for variadic fml::log.
+ *
+ * @tparam outStream - Output stream type.
+ * @param os - Output stream.
+ */
+template  <typename outStream>
+void log(outStream& os)
 {
   os << "\n";
 }
 
-
-template <typename outType,
+/**
+ * Logs the output.
+ *
+ * @tparam outStream - Output stream type.
+ * @tparam outType - Output type.
+ * @tparam Ts - Variadic templates.
+ * @param os - Output Stream.
+ * @param output - Output.
+ * @param args - Variadic parameters.
+ */
+template <typename outStream,
+          typename outType,
           typename... Ts>
-void log(std::ostream& os, outType output, Ts... args)
+void log(outStream& os,
+         const outType output,
+         const Ts... args)
 {
   os << output;
   log(os, args...);
-}
-
-void clog(std::ostream& os)
-{
-  os << "lol";
 }
 
 } // namespace fml

@@ -21,15 +21,16 @@ LinearRegression<DatasetType, LabelsType>::LinearRegression(const DatasetType &d
   parameters = lrf.GetInitialPoints();
 
   #ifdef FML_DEBUG_CONSOLE
-  std::cout << "Linear Regression: Start" << std::endl;
+  fml::log(std::cout, "Linear Regression: Start");
   #endif
 
   double overallObjective = optimizer.Optimize(lrf, parameters);
 
   #ifdef FML_DEBUG_CONSOLE
-  std::cout << "Linear Regression: Stop" << std::endl;
-  std::cout << "Linear Regression: Overall objective: "
-            << overallObjective << "." << std::endl;
+
+  fml::log(std::cout, "Linear Regression: Stop");
+  fml::log(std::cout , "Linear Regression: Overall objective: ",
+      overallObjective, ".");
   #endif
 }
 

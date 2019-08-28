@@ -13,9 +13,6 @@ TEST_CASE("SGD", "[SGD]")
 
   fml::optimizer::SGD sgd(0.01, 1000, 1e-9, 1);
 
-  fml::log(std::cout, "kek ", 10);
-  fml::clog(std::cout);
-
   auto coordinates = f.GetInitialPoint();
   double result = sgd.Optimize(f, coordinates);
 

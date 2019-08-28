@@ -54,12 +54,12 @@ TEST_CASE("LinearRegressionFunctionComplexEvaluate", "[LinearRegressionFunction]
 
   auto parameters = lrf.GetInitialPoints();
   REQUIRE(lrf.Evaluate(parameters)
-      == Approx(65590064403.02206).margin(1e-5));
+      == Approx(65591174465.4088668823).margin(1e-5));
 
   // Value of parameter for which the function is optimized.
   parameters = {{ 340412.659574,  504776.75649, -34950.601653}};
   parameters = xt::transpose(parameters);
-  REQUIRE(lrf.Evaluate(parameters) == Approx(8376410740.07934).margin(1e-5));
+  REQUIRE(lrf.Evaluate(parameters) == Approx(2043280050.633630991).margin(1e-5));
 }
 
 TEST_CASE("LinearRegressionFunctionSeparableEvaluate", "[LinearRegressionFunction]")
