@@ -29,25 +29,30 @@ template <typename DatasetType, typename LabelsType>
 template <typename E>
 double SoftmaxRegressionFunction<DatasetType, LabelsType>::Evaluate(const E& parameters)
 {
-//  // Evaluate the loss using sigmoid function
-//  auto sigmoid =  1 / (1 + xt::exp(-xt::linalg::dot(dataset, parameters)));
-//  auto error = - (labels * xt::log(sigmoid)) - ((1 - labels) * xt::log(1 - sigmoid));
-//  double loss = xt::sum(error / numFunctions())();
-//
-//  // Evaluate the regularization
-//  double reg = (lambda / (2 * numFunctions()))
-//      * xt::linalg::dot(xt::transpose(parameters), parameters)();
-//
-//  return loss + reg;
-  std::cout << xt::linalg::dot(dataset, parameters);
+  double logLikelihood, weightDecay, cost;
 
-  auto scores = xt::linalg::dot(dataset, parameters);
-  auto exp_scores = xt::exp(scores);
+  auto probabilities = xt::exp(xt::linalg::dot(parameters, dataset));
 
-  auto prob_scores = exp_scores / xt::sum(exp_scores, 1);
-  // auto prob_scores = 1;
-  std::cout << prob_scores;
-  return 0;
+  logLikelihood = xt::sum(probabilities * xt::transpose(groundTruth)
+      / xt::sum(probabilities, {0}))() / numFunctions();
+
+  // Evaluate the regularization
+  weightDecay = (lambda / (2 * numFunctions()))
+      * xt::linalg::dot(xt::transpose(parameters), parameters)();
+
+  cost = - logLikelihood + weightDecay;
+
+  return cost;
+}
+
+template <typename DatasetType, typename LabelsType>
+template <typename E, typename G>
+void SoftmaxRegressionFunction<DatasetType, LabelsType>::Gradient(const E &parameters, G &gradient)
+{
+  auto probabilities = xt::exp(xt::linalg::dot(parameters, dataset));
+
+  gradient = xt::linalg::dot((probabilities - xt::transpose(groundTruth)), xt::transpose(dataset)) / numFunctions() +
+      lambda * parameters;
 }
 
 template<typename DatasetType, typename LabelsType>

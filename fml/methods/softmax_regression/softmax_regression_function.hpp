@@ -35,9 +35,9 @@ public:
    * @param parameters - Parameters for Softmax Regression Function.
    * @param gradient - Evaluated gradient.
    */
-  // template <typename E, typename G>
-  // void Gradient(const E& parameters,
-  //               G& gradient);
+   template <typename E, typename G>
+   void Gradient(const E& parameters,
+                 G& gradient);
   
   /**
    * Number of functions in the given dataset.
