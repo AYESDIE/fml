@@ -21,11 +21,11 @@ double GradientDescent::Optimize(DifferentiableFunctionType &function,
   double lastObjective = std::numeric_limits<double>::max();
 
   // Iterate
-  for (int i = 1; i < maxIterations; ++i)
+  for (size_t i = 1; i < maxIterations; ++i)
   {
     overallObjective = function.Evaluate(iterate);
 
-    if (i % size_t(maxIterations / 10) == 0)
+    if (i % (maxIterations / 10) == 0)
       fml::log(std::cout, "Gradient Descent: iteration ", i, " / ", maxIterations,
           ", objective ", overallObjective, ".");
 
