@@ -1,5 +1,6 @@
 set(DIRS
     linear_regression
+    linear_svm
     logistic_regression
     softmax_regression)
 

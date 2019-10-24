@@ -12,11 +12,11 @@ namespace regression {
 
 template<typename DatasetType, typename LabelsType>
 LinearRegressionFunction<DatasetType, LabelsType>::LinearRegressionFunction(DatasetType& dataset,
-                                                                            LabelsType& labels,
-                                                                            const double lambda) :
-                                                                            dataset(dataset),
-                                                                            labels(labels),
-                                                                            lambda(lambda)
+    LabelsType& labels,
+    const double lambda) :
+    dataset(dataset),
+    labels(labels),
+    lambda(lambda)
 { /* does nothing here */ }
 
 template<typename DatasetType, typename LabelsType>
@@ -41,8 +41,8 @@ double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(const E& para
 template<typename DatasetType, typename LabelsType>
 template<typename E>
 double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(const E& parameters,
-                                                                   const size_t& firstId,
-                                                                   const size_t& batchSize)
+    const size_t& firstId,
+    const size_t& batchSize)
 {
   const size_t lastId = firstId + batchSize;
 
@@ -64,7 +64,7 @@ double LinearRegressionFunction<DatasetType, LabelsType>::Evaluate(const E& para
 template<typename DatasetType, typename LabelsType>
 template<typename E, typename G>
 void LinearRegressionFunction<DatasetType, LabelsType>::Gradient(const E& parameters,
-                                                                 G& gradient)
+    G& gradient)
 {
   // Evaluates the error between the evaluated values and
   // actual values.
@@ -79,9 +79,9 @@ template<typename DatasetType, typename LabelsType>
 template<typename E, typename G>
 void
 LinearRegressionFunction<DatasetType, LabelsType>::Gradient(const E& parameters,
-                                                            const size_t& firstId,
-                                                            G& gradient,
-                                                            const size_t& batchSize)
+    const size_t& firstId,
+    G& gradient,
+    const size_t& batchSize)
 {
   const size_t lastId = firstId + batchSize;
 

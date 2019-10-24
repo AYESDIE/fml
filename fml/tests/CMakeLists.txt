@@ -1,10 +1,11 @@
 project(fml_tests CXX)
 
 set(FML_TESTS_SOURCES
-    main.cpp
     gradient_descent_test.cpp
     linear_regression_test.cpp
+    linear_svm_test.cpp
     logistic_regression_test.cpp
+    main.cpp
     sgd_test.cpp
     softmax_regression_test.cpp
     )
